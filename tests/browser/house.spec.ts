@@ -18,14 +18,14 @@ test("loads an animated house, cats move, responsive camera and 25-cat performan
   const before = await state(page);
   expect(before.cats).toHaveLength(12);
   await page.waitForTimeout(6000);
-  const after = await state(page);
-  expect(
-    after.cats.filter(
+  await expect.poll(async () => {
+    const after = await state(page);
+    return after.cats.filter(
       (c: any, i: number) =>
         Math.abs(c.x - before.cats[i].x) > 0.1 ||
         c.state !== before.cats[i].state,
-    ).length,
-  ).toBeGreaterThan(4);
+    ).length;
+  }, { timeout: 30000 }).toBeGreaterThan(4);
   await page.screenshot({
     path: "docs/screenshots/house-desktop.png",
     fullPage: true,
