@@ -80,4 +80,3 @@ Runtime artwork is included in `public/assets/`. Editable Aseprite masters and s
 Project code, documentation, and project-created artwork are offered under the [MIT license](LICENSE), to the extent the contributors hold applicable rights. The original cat sprites and their derived coats retain CC0 terms. Third-party packages retain their own licenses. See [asset attribution](THIRD_PARTY_ASSETS.md) and [dependency notices](THIRD_PARTY_NOTICES.md).
 
 The first public release packages the existing 0.9.0+5 application with a fresh public history. Application development belongs here; installation-specific operations belong in each operator's deployment repository.
-

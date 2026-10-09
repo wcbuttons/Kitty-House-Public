@@ -1,0 +1,9 @@
+{
+  "reproducedExactly": true,
+  "pngStripsCompared": 142,
+  "nodeVersion": "v25.9.0",
+  "pngjsVersion": "7.0.0",
+  "sharpVersion": "0.35.4",
+  "requiredArgumentsValidated": true,
+  "generatorHasMachineSpecificPaths": false
+}

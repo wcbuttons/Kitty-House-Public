@@ -1,0 +1,15 @@
+const fs = require('node:fs');
+const path = require('node:path');
+const os = require('node:os');
+const { spawnSync } = require('node:child_process');
+const esbuild = require('esbuild');
+const root = path.resolve(__dirname, '../..');
+const aseprite = process.env.ASEPRITE_BIN || path.join(os.homedir(), 'Library/Application Support/Steam/steamapps/common/Aseprite/Aseprite.app/Contents/MacOS/aseprite');
+if (!fs.existsSync(aseprite)) throw Error('Set ASEPRITE_BIN to native Aseprite.');
+const output = esbuild.buildSync({stdin: {contents: "export {CABIN_V2_THEME,CABIN_V2_CATALOG,CABIN_V2_ART} from './src/cabin-v2';", resolveDir: root}, bundle:true, write:false, platform:'node', format:'cjs'}).outputFiles[0].text;
+const m={exports:{}};new Function('module','exports',output)(m,m.exports);
+const manifest={theme:m.exports.CABIN_V2_THEME,catalog:m.exports.CABIN_V2_CATALOG,art:m.exports.CABIN_V2_ART};
+fs.writeFileSync(path.join(__dirname,'cabin-v2-manifest.json'),JSON.stringify(manifest,null,2)+'\n');
+for(const dir of ['art/house-themes','public/assets/houses/cabin-v2','public/assets/houses/furniture'])fs.mkdirSync(path.join(root,dir),{recursive:true});
+const result=spawnSync(aseprite,['-b','--noinapp','--script-param',`root=${root}`,'--script',path.join(__dirname,'cabin-v2.lua')],{stdio:'inherit'});
+if(result.status!==0)process.exit(result.status||1);

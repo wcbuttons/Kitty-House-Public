@@ -1,0 +1,1287 @@
+{
+  "catalog": [
+    {
+      "id": "box",
+      "category": "Play",
+      "art": "box",
+      "name": "Cardboard box",
+      "width": 2,
+      "height": 1,
+      "anchor": "floor",
+      "color": 13082222,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 1,
+          "width": 2,
+          "actions": [
+            "sit"
+          ]
+        }
+      ],
+      "interaction": "hide",
+      "description": "A little hideaway"
+    },
+    {
+      "id": "crate",
+      "category": "Storage",
+      "art": "crate",
+      "name": "Small crate",
+      "width": 2,
+      "height": 1,
+      "anchor": "floor",
+      "color": 10254685,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 1,
+          "width": 2,
+          "actions": [
+            "sit",
+            "groom"
+          ]
+        }
+      ],
+      "description": "One step closer"
+    },
+    {
+      "id": "large-crate",
+      "category": "Climbing",
+      "art": "crate",
+      "name": "Tall crate",
+      "width": 2,
+      "height": 2,
+      "anchor": "floor",
+      "color": 12029540,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 2,
+          "width": 2,
+          "actions": [
+            "perch",
+            "groom"
+          ]
+        }
+      ],
+      "description": "A useful stepping stone"
+    },
+    {
+      "id": "couch",
+      "category": "Comfort",
+      "art": "couch",
+      "name": "Velvet sofa",
+      "width": 4,
+      "height": 2,
+      "anchor": "floor",
+      "color": 13793368,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 2,
+          "width": 4,
+          "actions": [
+            "sit",
+            "sleep",
+            "groom"
+          ]
+        }
+      ],
+      "description": "Room for two"
+    },
+    {
+      "id": "bed",
+      "category": "Comfort",
+      "art": "bed",
+      "name": "Day bed",
+      "width": 4,
+      "height": 1,
+      "anchor": "floor",
+      "color": 14727519,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 1,
+          "width": 4,
+          "actions": [
+            "sleep",
+            "sit"
+          ]
+        }
+      ],
+      "description": "Made for long naps"
+    },
+    {
+      "id": "shelf",
+      "category": "Climbing",
+      "art": "shelf",
+      "name": "Wall shelf",
+      "width": 3,
+      "height": 1,
+      "anchor": "wall",
+      "color": 11895129,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 1,
+          "width": 3,
+          "actions": [
+            "perch",
+            "sit"
+          ]
+        }
+      ],
+      "description": "Attaches to the back wall"
+    },
+    {
+      "id": "table",
+      "category": "Tables",
+      "art": "table",
+      "name": "Oak table",
+      "width": 3,
+      "height": 2,
+      "anchor": "floor",
+      "color": 11963747,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 2,
+          "width": 3,
+          "actions": [
+            "sit",
+            "groom"
+          ]
+        }
+      ],
+      "description": "A broad landing spot"
+    },
+    {
+      "id": "stool",
+      "category": "Tables",
+      "art": "table",
+      "name": "Little stool",
+      "width": 1,
+      "height": 1,
+      "anchor": "floor",
+      "color": 13409633,
+      "canFlip": false,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 1,
+          "width": 1,
+          "actions": [
+            "sit"
+          ]
+        }
+      ],
+      "description": "A tiny first step"
+    },
+    {
+      "id": "bookcase",
+      "category": "Storage",
+      "art": "bookcase",
+      "name": "Bookcase",
+      "width": 3,
+      "height": 4,
+      "anchor": "floor",
+      "color": 9201746,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 4,
+          "width": 3,
+          "actions": [
+            "perch",
+            "sleep"
+          ]
+        }
+      ],
+      "description": "For ambitious climbers"
+    },
+    {
+      "id": "scratcher",
+      "category": "Play",
+      "art": "scratcher",
+      "name": "Scratch post",
+      "width": 2,
+      "height": 2,
+      "anchor": "floor",
+      "color": 13023131,
+      "canFlip": false,
+      "cells": [
+        [
+          0.5,
+          0
+        ],
+        [
+          0.5,
+          1
+        ]
+      ],
+      "surfaces": [
+        {
+          "x": 0.5,
+          "y": 2,
+          "width": 1,
+          "actions": []
+        }
+      ],
+      "interaction": "scratch",
+      "description": "Stretch, scratch, repeat"
+    },
+    {
+      "id": "cat-tree",
+      "category": "Climbing",
+      "art": "cat-tree",
+      "name": "Cat tree",
+      "width": 4,
+      "height": 5,
+      "anchor": "floor",
+      "color": 8559738,
+      "canFlip": true,
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 1,
+          "width": 1,
+          "actions": [
+            "sit"
+          ]
+        },
+        {
+          "x": 1,
+          "y": 3,
+          "width": 1,
+          "actions": [
+            "groom"
+          ]
+        },
+        {
+          "x": 2,
+          "y": 5,
+          "width": 2,
+          "actions": [
+            "perch",
+            "sleep"
+          ]
+        }
+      ],
+      "description": "Three floors of adventure"
+    },
+    {
+      "id": "window-perch",
+      "category": "Climbing",
+      "art": "shelf",
+      "name": "Window perch",
+      "width": 3,
+      "height": 1,
+      "anchor": "wall",
+      "color": 6589831,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 1,
+          "width": 3,
+          "actions": [
+            "perch",
+            "groom"
+          ]
+        }
+      ],
+      "description": "A view worth the climb"
+    },
+    {
+      "id": "hammock",
+      "category": "Comfort",
+      "art": "shelf",
+      "name": "Ceiling hammock",
+      "width": 3,
+      "height": 1,
+      "anchor": "ceiling",
+      "color": 12881010,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 1,
+          "width": 3,
+          "actions": [
+            "sleep",
+            "sit"
+          ]
+        }
+      ],
+      "description": "Hangs two cells below the ceiling"
+    },
+    {
+      "id": "armchair",
+      "name": "Reading armchair",
+      "category": "Comfort",
+      "art": "couch",
+      "width": 2,
+      "height": 2,
+      "anchor": "floor",
+      "color": 10386841,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 2,
+          "width": 2,
+          "actions": [
+            "sit",
+            "sleep"
+          ]
+        }
+      ],
+      "description": "A soft spot for one"
+    },
+    {
+      "id": "ottoman",
+      "name": "Round ottoman",
+      "category": "Comfort",
+      "art": "cushion",
+      "width": 2,
+      "height": 1,
+      "anchor": "floor",
+      "color": 7841437,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 1,
+          "width": 2,
+          "actions": [
+            "sit",
+            "groom"
+          ]
+        }
+      ],
+      "description": "A low, cushioned stepping stone"
+    },
+    {
+      "id": "floor-cushion",
+      "name": "Floor cushion",
+      "category": "Comfort",
+      "art": "cushion",
+      "width": 2,
+      "height": 1,
+      "anchor": "floor",
+      "color": 14066030,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 1,
+          "width": 2,
+          "actions": [
+            "sleep",
+            "sit"
+          ]
+        }
+      ],
+      "description": "A sunny little napping spot"
+    },
+    {
+      "id": "wide-sofa",
+      "name": "Family sofa",
+      "category": "Comfort",
+      "art": "couch",
+      "width": 5,
+      "height": 2,
+      "anchor": "floor",
+      "color": 6851729,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 2,
+          "width": 5,
+          "actions": [
+            "sit",
+            "sleep",
+            "groom"
+          ]
+        }
+      ],
+      "description": "A generous landing for several cats"
+    },
+    {
+      "id": "pet-bed",
+      "name": "Little cat bed",
+      "category": "Comfort",
+      "art": "bed",
+      "width": 3,
+      "height": 1,
+      "anchor": "floor",
+      "color": 11769777,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 1,
+          "width": 3,
+          "actions": [
+            "sleep",
+            "sit"
+          ]
+        }
+      ],
+      "description": "A cozy place to curl up"
+    },
+    {
+      "id": "bench",
+      "name": "Wooden bench",
+      "category": "Tables",
+      "art": "table",
+      "width": 3,
+      "height": 1,
+      "anchor": "floor",
+      "color": 10788210,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 1,
+          "width": 3,
+          "actions": [
+            "sit",
+            "groom"
+          ]
+        }
+      ],
+      "description": "A wide first step off the floor"
+    },
+    {
+      "id": "side-table",
+      "name": "Side table",
+      "category": "Tables",
+      "art": "table",
+      "width": 2,
+      "height": 2,
+      "anchor": "floor",
+      "color": 11370853,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 2,
+          "width": 2,
+          "actions": [
+            "sit",
+            "perch"
+          ]
+        }
+      ],
+      "description": "A compact elevated landing"
+    },
+    {
+      "id": "low-cabinet",
+      "name": "Low cabinet",
+      "category": "Storage",
+      "art": "cabinet",
+      "width": 3,
+      "height": 2,
+      "anchor": "floor",
+      "color": 7444621,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 2,
+          "width": 3,
+          "actions": [
+            "sit",
+            "groom"
+          ]
+        }
+      ],
+      "description": "Cupboards below, cat seating above"
+    },
+    {
+      "id": "dresser",
+      "name": "Three-drawer dresser",
+      "category": "Storage",
+      "art": "cabinet",
+      "width": 3,
+      "height": 3,
+      "anchor": "floor",
+      "color": 11829347,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 3,
+          "width": 3,
+          "actions": [
+            "perch",
+            "sleep"
+          ]
+        }
+      ],
+      "description": "A taller destination reached by another piece"
+    },
+    {
+      "id": "book-stack",
+      "name": "Stack of books",
+      "category": "Climbing",
+      "art": "books",
+      "width": 1,
+      "height": 2,
+      "anchor": "floor",
+      "color": 10850672,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 2,
+          "width": 1,
+          "actions": [
+            "sit",
+            "perch"
+          ]
+        }
+      ],
+      "description": "A narrow step for a small gap"
+    },
+    {
+      "id": "toy-chest",
+      "name": "Toy chest",
+      "category": "Play",
+      "art": "box",
+      "width": 3,
+      "height": 1,
+      "anchor": "floor",
+      "color": 12294241,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 1,
+          "width": 3,
+          "actions": [
+            "play",
+            "sit"
+          ]
+        }
+      ],
+      "description": "A favorite place to claim and play",
+      "interaction": "hide"
+    },
+    {
+      "id": "play-tunnel",
+      "name": "Play tunnel",
+      "category": "Play",
+      "art": "tunnel",
+      "width": 3,
+      "height": 1,
+      "anchor": "floor",
+      "color": 7837857,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 1,
+          "width": 3,
+          "actions": [
+            "play"
+          ]
+        }
+      ],
+      "description": "A covered hideaway with a usable top",
+      "interaction": "hide"
+    },
+    {
+      "id": "long-shelf",
+      "name": "Long wall shelf",
+      "category": "Climbing",
+      "art": "shelf",
+      "width": 5,
+      "height": 1,
+      "anchor": "wall",
+      "color": 12883300,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 1,
+          "width": 5,
+          "actions": [
+            "perch",
+            "sit",
+            "groom"
+          ]
+        }
+      ],
+      "description": "A broad bridge between climbing routes"
+    },
+    {
+      "id": "step-shelf",
+      "name": "Little wall step",
+      "category": "Climbing",
+      "art": "shelf",
+      "width": 2,
+      "height": 1,
+      "anchor": "wall",
+      "color": 10853751,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 1,
+          "width": 2,
+          "actions": [
+            "perch",
+            "sit"
+          ]
+        }
+      ],
+      "description": "Fill a missing step on the back wall"
+    },
+    {
+      "id": "cat-stairs",
+      "name": "Cat steps",
+      "category": "Climbing",
+      "art": "stairs",
+      "width": 3,
+      "height": 3,
+      "anchor": "floor",
+      "color": 10858120,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 1,
+          "width": 1,
+          "actions": [
+            "sit",
+            "perch"
+          ]
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "width": 1,
+          "actions": [
+            "sit",
+            "perch"
+          ]
+        },
+        {
+          "x": 2,
+          "y": 3,
+          "width": 1,
+          "actions": [
+            "sit",
+            "perch"
+          ]
+        }
+      ],
+      "description": "Three connected steps for an easy climb",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ]
+    },
+    {
+      "id": "ramen-counter",
+      "name": "Ramen counter",
+      "category": "Tables",
+      "art": "cabinet",
+      "width": 8,
+      "height": 4,
+      "anchor": "floor",
+      "color": 12023878,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 4,
+          "width": 8,
+          "actions": [
+            "sit",
+            "groom",
+            "perch"
+          ]
+        }
+      ],
+      "description": "A long wooden counter, reached by a nearby stool"
+    },
+    {
+      "id": "ramen-stool",
+      "name": "Counter stool",
+      "category": "Climbing",
+      "art": "table",
+      "width": 1,
+      "height": 3,
+      "anchor": "floor",
+      "color": 10117184,
+      "canFlip": false,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 3,
+          "width": 1,
+          "actions": [
+            "sit",
+            "perch"
+          ]
+        }
+      ],
+      "description": "A tall first step to the ramen counter"
+    },
+    {
+      "id": "bowl-rack",
+      "name": "Bowl rack",
+      "category": "Storage",
+      "art": "bookcase",
+      "width": 4,
+      "height": 3,
+      "anchor": "wall",
+      "color": 7755331,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 3,
+          "width": 4,
+          "actions": [
+            "perch",
+            "groom"
+          ]
+        }
+      ],
+      "description": "A wall cabinet with room for a watchful cat on top"
+    },
+    {
+      "id": "futon",
+      "name": "Quilted futon",
+      "category": "Comfort",
+      "art": "bed",
+      "width": 5,
+      "height": 1,
+      "anchor": "floor",
+      "color": 10969680,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 1,
+          "width": 5,
+          "actions": [
+            "sleep",
+            "sit",
+            "groom"
+          ]
+        }
+      ],
+      "description": "A wide, quiet place to curl up upstairs"
+    },
+    {
+      "id": "noodle-table",
+      "name": "Noodle table",
+      "category": "Tables",
+      "art": "table",
+      "width": 3,
+      "height": 3,
+      "anchor": "floor",
+      "color": 12292702,
+      "canFlip": true,
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 3,
+          "width": 3,
+          "actions": [
+            "sit",
+            "groom",
+            "perch"
+          ]
+        }
+      ],
+      "description": "A small dining table with a sheltered space beneath"
+    },
+    {
+      "id": "planter",
+      "name": "Garden planter",
+      "category": "Play",
+      "art": "crate",
+      "width": 2,
+      "height": 2,
+      "anchor": "floor",
+      "color": 9267536,
+      "canFlip": true,
+      "surfaces": [],
+      "description": "Leafy terrace decoration; give cats a bench beside it"
+    }
+  ],
+  "themes": [
+    {
+      "id": "cabin",
+      "name": "Woodland Cabin",
+      "description": "Warm timber, quiet reading corners and a roof full of cozy naps.",
+      "defaultCatCount": 10,
+      "rooms": [
+        {
+          "id": "lounge",
+          "name": "The hearth room",
+          "x": 130,
+          "floor": 709,
+          "width": 16,
+          "height": 7,
+          "color": 12622704
+        },
+        {
+          "id": "bedroom",
+          "name": "The sleeping nook",
+          "x": 562,
+          "floor": 709,
+          "width": 16,
+          "height": 7,
+          "color": 12888711
+        },
+        {
+          "id": "library",
+          "name": "The reading loft",
+          "x": 130,
+          "floor": 511,
+          "width": 16,
+          "height": 7,
+          "color": 11705206
+        },
+        {
+          "id": "playroom",
+          "name": "The craft room",
+          "x": 562,
+          "floor": 511,
+          "width": 16,
+          "height": 7,
+          "color": 12363908
+        },
+        {
+          "id": "attic",
+          "name": "Under the eaves",
+          "x": 130,
+          "floor": 313,
+          "width": 32.6,
+          "height": 8,
+          "color": 10914667,
+          "attic": true
+        }
+      ],
+      "passages": [
+        {
+          "id": "lower-door",
+          "kind": "door",
+          "a": {
+            "roomId": "lounge",
+            "x": 15.5,
+            "y": 0
+          },
+          "b": {
+            "roomId": "bedroom",
+            "x": 0.5,
+            "y": 0
+          }
+        },
+        {
+          "id": "upper-door",
+          "kind": "door",
+          "a": {
+            "roomId": "library",
+            "x": 15.5,
+            "y": 0
+          },
+          "b": {
+            "roomId": "playroom",
+            "x": 0.5,
+            "y": 0
+          }
+        },
+        {
+          "id": "lower-ladder",
+          "kind": "ladder",
+          "a": {
+            "roomId": "lounge",
+            "x": 6,
+            "y": 0
+          },
+          "b": {
+            "roomId": "library",
+            "x": 6.5,
+            "y": 0
+          }
+        },
+        {
+          "id": "attic-ladder",
+          "kind": "ladder",
+          "a": {
+            "roomId": "playroom",
+            "x": 14.35,
+            "y": 0
+          },
+          "b": {
+            "roomId": "attic",
+            "x": 30.965384615384615,
+            "y": 0
+          }
+        }
+      ],
+      "defaultFurniture": [
+        [
+          "couch",
+          "lounge",
+          1
+        ],
+        [
+          "large-crate",
+          "lounge",
+          7
+        ],
+        [
+          "table",
+          "lounge",
+          11
+        ],
+        [
+          "shelf",
+          "lounge",
+          8,
+          3
+        ],
+        [
+          "bed",
+          "bedroom",
+          1
+        ],
+        [
+          "scratcher",
+          "bedroom",
+          7
+        ],
+        [
+          "box",
+          "bedroom",
+          12
+        ],
+        [
+          "window-perch",
+          "bedroom",
+          12,
+          2
+        ],
+        [
+          "large-crate",
+          "library",
+          13
+        ],
+        [
+          "large-crate",
+          "library",
+          4
+        ],
+        [
+          "bookcase",
+          "library",
+          9
+        ],
+        [
+          "shelf",
+          "library",
+          6,
+          3
+        ],
+        [
+          "cat-tree",
+          "playroom",
+          2
+        ],
+        [
+          "table",
+          "playroom",
+          8
+        ],
+        [
+          "window-perch",
+          "playroom",
+          11,
+          2
+        ],
+        [
+          "stool",
+          "playroom",
+          13
+        ],
+        [
+          "box",
+          "attic",
+          4
+        ],
+        [
+          "large-crate",
+          "attic",
+          8
+        ],
+        [
+          "bed",
+          "attic",
+          14
+        ],
+        [
+          "crate",
+          "attic",
+          21
+        ],
+        [
+          "shelf",
+          "attic",
+          10,
+          3
+        ],
+        [
+          "crate",
+          "attic",
+          24
+        ]
+      ]
+    },
+    {
+      "id": "ramen",
+      "name": "Neko Ramen",
+      "description": "A small neighborhood ramen shop with a home above the lanterns.",
+      "defaultCatCount": 6,
+      "rooms": [
+        {
+          "id": "shop",
+          "name": "The ramen shop",
+          "x": 189,
+          "floor": 691,
+          "width": 29,
+          "height": 12,
+          "color": 13015656
+        },
+        {
+          "id": "studio",
+          "name": "The upstairs home",
+          "x": 191,
+          "floor": 341,
+          "width": 18.5,
+          "height": 6,
+          "color": 13810324
+        },
+        {
+          "id": "terrace",
+          "name": "The rooftop garden",
+          "x": 687,
+          "floor": 341,
+          "width": 12.8,
+          "height": 8.3,
+          "color": 7442041,
+          "outdoor": true
+        }
+      ],
+      "passages": [
+        {
+          "id": "shop-stairs",
+          "kind": "stairs",
+          "a": {
+            "roomId": "shop",
+            "x": 1.25,
+            "y": 0
+          },
+          "b": {
+            "roomId": "studio",
+            "x": 4.2,
+            "y": 0
+          }
+        },
+        {
+          "id": "terrace-door",
+          "kind": "door",
+          "a": {
+            "roomId": "studio",
+            "x": 17.75,
+            "y": 0
+          },
+          "b": {
+            "roomId": "terrace",
+            "x": 0.5,
+            "y": 0
+          }
+        }
+      ],
+      "defaultFurniture": [
+        [
+          "ramen-counter",
+          "shop",
+          9
+        ],
+        [
+          "ramen-stool",
+          "shop",
+          7
+        ],
+        [
+          "ramen-stool",
+          "shop",
+          18
+        ],
+        [
+          "noodle-table",
+          "shop",
+          23
+        ],
+        [
+          "bowl-rack",
+          "shop",
+          21,
+          3
+        ],
+        [
+          "futon",
+          "studio",
+          10
+        ],
+        [
+          "low-cabinet",
+          "studio",
+          0
+        ],
+        [
+          "shelf",
+          "studio",
+          10,
+          3
+        ],
+        [
+          "planter",
+          "terrace",
+          7
+        ],
+        [
+          "planter",
+          "terrace",
+          10
+        ],
+        [
+          "bench",
+          "terrace",
+          3
+        ],
+        [
+          "floor-cushion",
+          "studio",
+          6
+        ]
+      ]
+    }
+  ]
+}

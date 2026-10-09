@@ -1,0 +1,35 @@
+{
+  "name": "kitty-house",
+  "version": "0.9.0+5",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5173 --strictPort",
+    "build": "tsc --noEmit && vite build",
+    "build:art": "node tools/house-art/build.cjs",
+    "build:art:v2": "node tools/house-art/build-v2.cjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "preview": "vite preview --host 127.0.0.1 --port 4173 --strictPort",
+    "preview:lan": "vite preview --host 0.0.0.0 --port 4174 --strictPort",
+    "serve:lan": "npm run build && npm run preview:lan"
+  },
+  "dependencies": {
+    "phaser": "4.2.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.0",
+    "vitest": "^4.0.18"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wcbuttons/Kitty-House-Public.git"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

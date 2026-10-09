@@ -1,0 +1,240 @@
+[
+  {
+    "id": 7,
+    "name": "Classic Tuxedo",
+    "description": "A black coat with a bright white chest and pale accents.",
+    "category": "bicolor",
+    "originalBaseVariant": 1,
+    "palette": {
+      "505121": "6cc67c",
+      "9b7521": "34383d",
+      "88671c": "23272c",
+      "88671d": "25292e",
+      "b59858": "c8cdd0",
+      "d6c295": "f6f2e9",
+      "6b5012": "15191f",
+      "785b18": "1c2026",
+      "8f6c1f": "282d33",
+      "95701f": "2e3339",
+      "ac7a0a": "41464d",
+      "b48827": "4b5158",
+      "7e5e18": "20252b",
+      "a1781e": "3d434a"
+    }
+  },
+  {
+    "id": 8,
+    "name": "Snow White",
+    "description": "A snowy white coat with cool shading and blue eyes.",
+    "category": "solid",
+    "originalBaseVariant": 2,
+    "palette": {
+      "101212": "899eae",
+      "131616": "a2b3c0",
+      "171919": "b9c6d1",
+      "1d2020": "e1e8ed",
+      "2d3131": "fffdf6",
+      "b5aa30": "318aa8",
+      "3c4141": "ffffff"
+    }
+  },
+  {
+    "id": 9,
+    "name": "Chocolate Point",
+    "description": "A toasted cream coat with rich chocolate points and turquoise eyes.",
+    "category": "point",
+    "originalBaseVariant": 3,
+    "palette": {
+      "171919": "321a13",
+      "267792": "42a4ad",
+      "625956": "65391f",
+      "c2c2c2": "d7b789",
+      "d5d5d5": "f6dab0",
+      "554c48": "482716",
+      "5d5b5b": "57301a",
+      "836d67": "956247",
+      "66605d": "754729",
+      "716f6f": "805136"
+    }
+  },
+  {
+    "id": 10,
+    "name": "Russet",
+    "description": "Deep red-ginger fur with a warm cream chest and amber eyes.",
+    "category": "solid",
+    "originalBaseVariant": 1,
+    "palette": {
+      "505121": "edbf56",
+      "9b7521": "b54329",
+      "88671c": "90321f",
+      "88671d": "94341f",
+      "b59858": "e7a86e",
+      "d6c295": "ffdeaa",
+      "6b5012": "632217",
+      "785b18": "76281b",
+      "8f6c1f": "9c3720",
+      "95701f": "a63c24",
+      "ac7a0a": "bd5730",
+      "b48827": "d1683d",
+      "7e5e18": "822b1b",
+      "a1781e": "bd4c2b"
+    }
+  },
+  {
+    "id": 11,
+    "name": "Silver Tabby",
+    "description": "A bright silver coat with graphite stripes and green eyes.",
+    "category": "tabby",
+    "originalBaseVariant": 6,
+    "palette": {
+      "646464": "8d9aa7",
+      "848484": "c0cbd2",
+      "a8a9a9": "e4e9eb",
+      "4f4f4f": "68717c",
+      "a0a0a0": "d6dfe4",
+      "c0c0c0": "f4f5f2",
+      "d6d6d6": "fffdf6",
+      "e8d82a": "46b279",
+      "65391b": "53596b"
+    }
+  },
+  {
+    "id": 12,
+    "name": "Calico",
+    "description": "A white saddle, ginger patches, and charcoal accents.",
+    "category": "calico",
+    "originalBaseVariant": 4,
+    "palette": {
+      "776360": "c99774",
+      "6c6c6c": "f5eee3",
+      "ac8475": "d27332",
+      "5c5b5b": "c8beb0",
+      "c7a79b": "30333c",
+      "916e61": "a84d22",
+      "b68c7d": "e78a3e",
+      "d9bbb0": "4b4c56",
+      "328a95": "5cab6f",
+      "2f2e2e": "22242b",
+      "d3b2a5": "3e424b",
+      "7e5e18": "905423",
+      "a47b70": "ca662b"
+    }
+  },
+  {
+    "id": 13,
+    "name": "Blue Smoke",
+    "description": "A slate-blue coat with deep blue shadows and green eyes.",
+    "category": "solid",
+    "originalBaseVariant": 2,
+    "palette": {
+      "101212": "253b55",
+      "131616": "304b68",
+      "171919": "3d607e",
+      "1d2020": "597f9e",
+      "2d3131": "7eacc5",
+      "b5aa30": "a9d776",
+      "3c4141": "a6c9d9"
+    }
+  },
+  {
+    "id": 14,
+    "name": "Cream Longhair",
+    "description": "Fluffy buttery cream fur with a pale ruff and golden eyes.",
+    "category": "longhair",
+    "originalBaseVariant": 5,
+    "palette": {
+      "595959": "795b3c",
+      "d1d1d1": "f2dc9f",
+      "adadad": "d2b778",
+      "e6e6e6": "fff4d7",
+      "c3bab2": "e6bf77",
+      "8d8d8d": "b5955d",
+      "7d746c": "a17c4e",
+      "7e7e7e": "ae8c55",
+      "b4b4b4": "d6bd82",
+      "1385c0": "a87e2f",
+      "e2d656": "e5a73f",
+      "4b4b4b": "654930"
+    }
+  },
+  {
+    "id": 15,
+    "name": "Chocolate Longhair",
+    "description": "A fluffy chocolate coat with a copper saddle and pale cream ruff.",
+    "category": "longhair",
+    "originalBaseVariant": 5,
+    "palette": {
+      "595959": "2d1b15",
+      "d1d1d1": "885135",
+      "adadad": "613822",
+      "e6e6e6": "f5dcad",
+      "c3bab2": "bc804c",
+      "8d8d8d": "46281a",
+      "7d746c": "81502e",
+      "7e7e7e": "4e2d1d",
+      "b4b4b4": "855035",
+      "1385c0": "77bec5",
+      "e2d656": "d6bc68",
+      "4b4b4b": "21130f"
+    }
+  },
+  {
+    "id": 16,
+    "name": "Ginger Tabby",
+    "description": "Golden-orange fur with burnt-ginger stripes and a pale muzzle.",
+    "category": "tabby",
+    "originalBaseVariant": 6,
+    "palette": {
+      "646464": "ad5925",
+      "848484": "ce792f",
+      "a8a9a9": "efa552",
+      "4f4f4f": "91441f",
+      "a0a0a0": "e89641",
+      "c0c0c0": "ffd394",
+      "d6d6d6": "fff0c5",
+      "e8d82a": "65a077",
+      "65391b": "7b371c"
+    }
+  },
+  {
+    "id": 17,
+    "name": "Flame Point",
+    "description": "An ivory coat with bright ginger points and blue eyes.",
+    "category": "point",
+    "originalBaseVariant": 3,
+    "palette": {
+      "171919": "8e421f",
+      "267792": "3e96bf",
+      "625956": "dc7a3f",
+      "c2c2c2": "f4ecda",
+      "d5d5d5": "fff9ec",
+      "554c48": "b2592a",
+      "5d5b5b": "c36732",
+      "836d67": "ecaa73",
+      "66605d": "e3894a",
+      "716f6f": "e49a62"
+    }
+  },
+  {
+    "id": 18,
+    "name": "Amber Tortoiseshell",
+    "description": "A dark espresso saddle with bold amber and honey patches.",
+    "category": "tortoiseshell",
+    "originalBaseVariant": 4,
+    "palette": {
+      "776360": "a67b3d",
+      "6c6c6c": "3b2c28",
+      "ac8475": "d79a38",
+      "5c5b5b": "241c1b",
+      "c7a79b": "f4c66d",
+      "916e61": "a76d23",
+      "b68c7d": "e5aa43",
+      "d9bbb0": "ffdfa0",
+      "328a95": "79b45c",
+      "2f2e2e": "141414",
+      "d3b2a5": "f8d385",
+      "7e5e18": "996421",
+      "a47b70": "ce8f31"
+    }
+  }
+]

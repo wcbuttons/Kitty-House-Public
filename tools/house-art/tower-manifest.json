@@ -1,0 +1,488 @@
+{
+  "catalog": [
+    {
+      "id": "tower-travel-chest",
+      "name": "Wayfarer's chest",
+      "category": "Play",
+      "art": "box",
+      "width": 3,
+      "height": 1,
+      "anchor": "floor",
+      "color": 9004870,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 1,
+          "width": 3,
+          "actions": [
+            "sit",
+            "play"
+          ]
+        }
+      ],
+      "interaction": "hide",
+      "description": "A brass-bound traveling chest with a cat-sized hideaway"
+    },
+    {
+      "id": "tower-potion-desk",
+      "name": "Potion desk",
+      "category": "Tables",
+      "art": "table",
+      "width": 4,
+      "height": 2,
+      "anchor": "floor",
+      "color": 9662801,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 2,
+          "width": 4,
+          "actions": [
+            "sit",
+            "perch",
+            "groom"
+          ]
+        }
+      ],
+      "description": "A broad wooden worktop beside the wizard's ingredients"
+    },
+    {
+      "id": "tower-alchemy-cabinet",
+      "name": "Alchemy cabinet",
+      "category": "Storage",
+      "art": "cabinet",
+      "width": 3,
+      "height": 3,
+      "anchor": "floor",
+      "color": 6585202,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 3,
+          "width": 3,
+          "actions": [
+            "perch",
+            "sit"
+          ]
+        }
+      ],
+      "description": "Bottles safely below, a clear lookout above"
+    },
+    {
+      "id": "tower-herb-shelf",
+      "name": "Apothecary shelf",
+      "category": "Climbing",
+      "art": "shelf",
+      "width": 3,
+      "height": 1,
+      "anchor": "wall",
+      "color": 10061143,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 1,
+          "width": 3,
+          "actions": [
+            "perch",
+            "sit"
+          ]
+        }
+      ],
+      "description": "A carved wall shelf with herbs hanging beneath its landing"
+    },
+    {
+      "id": "tower-arcane-bookcase",
+      "name": "Spellbook bookcase",
+      "category": "Storage",
+      "art": "bookcase",
+      "width": 3,
+      "height": 3,
+      "anchor": "floor",
+      "color": 7692683,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 3,
+          "width": 3,
+          "actions": [
+            "perch",
+            "sleep"
+          ]
+        }
+      ],
+      "description": "Old spellbooks beneath a quiet elevated napping spot"
+    },
+    {
+      "id": "tower-book-stack",
+      "name": "Stack of grimoires",
+      "category": "Climbing",
+      "art": "books",
+      "width": 2,
+      "height": 2,
+      "anchor": "floor",
+      "color": 8483468,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 1,
+          "y": 2,
+          "width": 1,
+          "actions": [
+            "sit",
+            "perch"
+          ]
+        }
+      ],
+      "description": "A sturdy first step to the tower's higher shelves"
+    },
+    {
+      "id": "tower-reading-chair",
+      "name": "Wizard's reading chair",
+      "category": "Comfort",
+      "art": "couch",
+      "width": 2,
+      "height": 3,
+      "anchor": "floor",
+      "color": 7105425,
+      "canFlip": true,
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 1,
+          "width": 2,
+          "actions": [
+            "sleep",
+            "sit",
+            "groom"
+          ]
+        }
+      ],
+      "description": "A velvet armchair for sharing a long, quiet afternoon"
+    },
+    {
+      "id": "tower-moon-bed",
+      "name": "Moon-quilt bed",
+      "category": "Comfort",
+      "art": "bed",
+      "width": 4,
+      "height": 1,
+      "anchor": "floor",
+      "color": 9475511,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 1,
+          "width": 4,
+          "actions": [
+            "sleep",
+            "sit",
+            "groom"
+          ]
+        }
+      ],
+      "description": "A low bed tucked under a quilt of moons and stars"
+    },
+    {
+      "id": "tower-star-cushion",
+      "name": "Star cushion",
+      "category": "Comfort",
+      "art": "cushion",
+      "width": 2,
+      "height": 1,
+      "anchor": "floor",
+      "color": 10126249,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 1,
+          "width": 2,
+          "actions": [
+            "sleep",
+            "sit"
+          ]
+        }
+      ],
+      "description": "A soft floor cushion embroidered with tiny constellations"
+    },
+    {
+      "id": "tower-crystal-plinth",
+      "name": "Moonstone plinth",
+      "category": "Storage",
+      "art": "cabinet",
+      "width": 2,
+      "height": 2,
+      "anchor": "floor",
+      "color": 8494234,
+      "canFlip": true,
+      "surfaces": [],
+      "description": "A glowing crystal display; leave its delicate top undisturbed"
+    },
+    {
+      "id": "tower-observatory-perch",
+      "name": "Stargazer's perch",
+      "category": "Climbing",
+      "art": "shelf",
+      "width": 3,
+      "height": 1,
+      "anchor": "wall",
+      "color": 9207967,
+      "canFlip": true,
+      "surfaces": [
+        {
+          "x": 0,
+          "y": 1,
+          "width": 3,
+          "actions": [
+            "perch",
+            "groom",
+            "sit"
+          ]
+        }
+      ],
+      "description": "A crescent-carved wall perch for watching the sky"
+    },
+    {
+      "id": "tower-spiral-scratcher",
+      "name": "Spiral scratch post",
+      "category": "Play",
+      "art": "scratcher",
+      "width": 2,
+      "height": 2,
+      "anchor": "floor",
+      "color": 11967597,
+      "canFlip": false,
+      "cells": [
+        [
+          0.5,
+          0
+        ],
+        [
+          0.5,
+          1
+        ]
+      ],
+      "surfaces": [
+        {
+          "x": 0.5,
+          "y": 2,
+          "width": 1,
+          "actions": []
+        }
+      ],
+      "interaction": "scratch",
+      "description": "A rope-wrapped post with a brass base for a satisfying stretch"
+    }
+  ],
+  "theme": {
+    "id": "tower",
+    "name": "Moonwhisker Tower",
+    "description": "A wizard's stone tower, from the welcome hearth to a sky full of stars.",
+    "defaultCatCount": 8,
+    "world": {
+      "width": 792,
+      "height": 1408
+    },
+    "rooms": [
+      {
+        "id": "vestibule",
+        "name": "The welcome hearth",
+        "x": 188,
+        "floor": 1304,
+        "width": 16,
+        "height": 7,
+        "color": 10848370
+      },
+      {
+        "id": "potions",
+        "name": "The potion workshop",
+        "x": 188,
+        "floor": 1084,
+        "width": 16,
+        "height": 7,
+        "color": 8491916
+      },
+      {
+        "id": "library",
+        "name": "The spellbook library",
+        "x": 188,
+        "floor": 864,
+        "width": 16,
+        "height": 7,
+        "color": 10194559
+      },
+      {
+        "id": "bedchamber",
+        "name": "The moonlit bedchamber",
+        "x": 188,
+        "floor": 644,
+        "width": 16,
+        "height": 7,
+        "color": 9998506
+      },
+      {
+        "id": "observatory",
+        "name": "The star observatory",
+        "x": 188,
+        "floor": 424,
+        "width": 16,
+        "height": 7,
+        "color": 8161949
+      }
+    ],
+    "passages": [
+      {
+        "id": "tower-hearth-ladder",
+        "kind": "ladder",
+        "a": {
+          "roomId": "vestibule",
+          "x": 1.25,
+          "y": 0
+        },
+        "b": {
+          "roomId": "potions",
+          "x": 1.25,
+          "y": 0
+        }
+      },
+      {
+        "id": "tower-workshop-ladder",
+        "kind": "ladder",
+        "a": {
+          "roomId": "potions",
+          "x": 14.5,
+          "y": 0
+        },
+        "b": {
+          "roomId": "library",
+          "x": 14.5,
+          "y": 0
+        }
+      },
+      {
+        "id": "tower-library-ladder",
+        "kind": "ladder",
+        "a": {
+          "roomId": "library",
+          "x": 1.25,
+          "y": 0
+        },
+        "b": {
+          "roomId": "bedchamber",
+          "x": 1.25,
+          "y": 0
+        }
+      },
+      {
+        "id": "tower-moon-ladder",
+        "kind": "ladder",
+        "a": {
+          "roomId": "bedchamber",
+          "x": 14.5,
+          "y": 0
+        },
+        "b": {
+          "roomId": "observatory",
+          "x": 14.5,
+          "y": 0
+        }
+      }
+    ],
+    "defaultFurniture": [
+      [
+        "tower-travel-chest",
+        "vestibule",
+        3
+      ],
+      [
+        "tower-spiral-scratcher",
+        "vestibule",
+        8
+      ],
+      [
+        "tower-star-cushion",
+        "vestibule",
+        11
+      ],
+      [
+        "tower-potion-desk",
+        "potions",
+        3
+      ],
+      [
+        "tower-alchemy-cabinet",
+        "potions",
+        9
+      ],
+      [
+        "tower-herb-shelf",
+        "potions",
+        4,
+        3
+      ],
+      [
+        "tower-book-stack",
+        "library",
+        6
+      ],
+      [
+        "tower-arcane-bookcase",
+        "library",
+        2
+      ],
+      [
+        "tower-reading-chair",
+        "library",
+        11
+      ],
+      [
+        "tower-moon-bed",
+        "bedchamber",
+        3
+      ],
+      [
+        "tower-star-cushion",
+        "bedchamber",
+        10
+      ],
+      [
+        "tower-observatory-perch",
+        "bedchamber",
+        7,
+        0
+      ],
+      [
+        "tower-crystal-plinth",
+        "observatory",
+        0
+      ],
+      [
+        "tower-book-stack",
+        "observatory",
+        4
+      ],
+      [
+        "tower-observatory-perch",
+        "observatory",
+        7,
+        1
+      ]
+    ]
+  }
+}

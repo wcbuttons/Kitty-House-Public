@@ -1,0 +1,15 @@
+const fs = require('node:fs');
+const path = require('node:path');
+const os = require('node:os');
+const { spawnSync } = require('node:child_process');
+const esbuild = require('esbuild');
+const root = path.resolve(__dirname, '../..');
+const aseprite = process.env.ASEPRITE_BIN || path.join(os.homedir(), 'Library/Application Support/Steam/steamapps/common/Aseprite/Aseprite.app/Contents/MacOS/aseprite');
+if (!fs.existsSync(aseprite)) throw Error('Set ASEPRITE_BIN to the Aseprite executable.');
+const result = esbuild.buildSync({ stdin: { contents: "export {RAMEN_V2_THEME,RAMEN_V2_CATALOG,RAMEN_V2_ART} from './src/ramen-v2';", resolveDir: root }, bundle: true, write: false, platform: 'node', format: 'cjs' }).outputFiles[0].text;
+const moduleData = { exports: {} };
+new Function('module', 'exports', result)(moduleData, moduleData.exports);
+fs.writeFileSync(path.join(__dirname, 'ramen-v2-manifest.json'), JSON.stringify({ theme: moduleData.exports.RAMEN_V2_THEME, catalog: moduleData.exports.RAMEN_V2_CATALOG, art: moduleData.exports.RAMEN_V2_ART }, null, 2) + '\n');
+for (const folder of ['art/house-themes', 'public/assets/houses/ramen-v2', 'public/assets/houses/furniture']) fs.mkdirSync(path.join(root, folder), { recursive: true });
+const run = spawnSync(aseprite, ['-b', '--noinapp', '--script-param', `root=${root}`, '--script', path.join(__dirname, 'ramen-v2.lua')], { stdio: 'inherit' });
+if (run.status !== 0) process.exit(run.status || 1);

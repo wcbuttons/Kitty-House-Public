@@ -1,0 +1,146 @@
+[
+  {
+    "id": 1,
+    "name": "Golden Ginger",
+    "description": "A warm golden coat with a pale cream chest.",
+    "originalBaseVariant": 1,
+    "sourceKind": "original",
+    "category": "Solid"
+  },
+  {
+    "id": 2,
+    "name": "Midnight Black",
+    "description": "A charcoal-black coat and bright yellow eyes.",
+    "originalBaseVariant": 2,
+    "sourceKind": "original",
+    "category": "Solid"
+  },
+  {
+    "id": 3,
+    "name": "Seal Point",
+    "description": "A pale coat with smoky dark points and blue eyes.",
+    "originalBaseVariant": 3,
+    "sourceKind": "original",
+    "category": "Pointed"
+  },
+  {
+    "id": 4,
+    "name": "Soft Tortoiseshell",
+    "description": "Muted charcoal and copper patches with pale accents.",
+    "originalBaseVariant": 4,
+    "sourceKind": "original",
+    "category": "Tortoiseshell"
+  },
+  {
+    "id": 5,
+    "name": "Silver Longhair",
+    "description": "Fluffy silver-and-cream fur with one blue and one gold eye.",
+    "originalBaseVariant": 5,
+    "sourceKind": "original",
+    "category": "Longhair"
+  },
+  {
+    "id": 6,
+    "name": "Gray Tabby",
+    "description": "A gray coat with dark tabby stripes and yellow eyes.",
+    "originalBaseVariant": 6,
+    "sourceKind": "original",
+    "category": "Tabby"
+  },
+  {
+    "id": 7,
+    "name": "Classic Tuxedo",
+    "description": "A black coat with a bright white chest and pale accents.",
+    "originalBaseVariant": 1,
+    "sourceKind": "palette-derived",
+    "category": "Bicolor"
+  },
+  {
+    "id": 8,
+    "name": "Snow White",
+    "description": "A snowy white coat with cool shading and blue eyes.",
+    "originalBaseVariant": 2,
+    "sourceKind": "palette-derived",
+    "category": "Solid"
+  },
+  {
+    "id": 9,
+    "name": "Chocolate Point",
+    "description": "A toasted cream coat with rich chocolate points and turquoise eyes.",
+    "originalBaseVariant": 3,
+    "sourceKind": "palette-derived",
+    "category": "Pointed"
+  },
+  {
+    "id": 10,
+    "name": "Russet",
+    "description": "Deep red-ginger fur with a warm cream chest and amber eyes.",
+    "originalBaseVariant": 1,
+    "sourceKind": "palette-derived",
+    "category": "Solid"
+  },
+  {
+    "id": 11,
+    "name": "Silver Tabby",
+    "description": "A bright silver coat with graphite stripes and green eyes.",
+    "originalBaseVariant": 6,
+    "sourceKind": "palette-derived",
+    "category": "Tabby"
+  },
+  {
+    "id": 12,
+    "name": "Calico",
+    "description": "A white saddle, ginger patches, and charcoal accents.",
+    "originalBaseVariant": 4,
+    "sourceKind": "palette-derived",
+    "category": "Calico"
+  },
+  {
+    "id": 13,
+    "name": "Blue Smoke",
+    "description": "A slate-blue coat with deep blue shadows and green eyes.",
+    "originalBaseVariant": 2,
+    "sourceKind": "palette-derived",
+    "category": "Solid"
+  },
+  {
+    "id": 14,
+    "name": "Cream Longhair",
+    "description": "Fluffy buttery cream fur with a pale ruff and golden eyes.",
+    "originalBaseVariant": 5,
+    "sourceKind": "palette-derived",
+    "category": "Longhair"
+  },
+  {
+    "id": 15,
+    "name": "Chocolate Longhair",
+    "description": "A fluffy chocolate coat with a copper saddle and pale cream ruff.",
+    "originalBaseVariant": 5,
+    "sourceKind": "palette-derived",
+    "category": "Longhair"
+  },
+  {
+    "id": 16,
+    "name": "Ginger Tabby",
+    "description": "Golden-orange fur with burnt-ginger stripes and a pale muzzle.",
+    "originalBaseVariant": 6,
+    "sourceKind": "palette-derived",
+    "category": "Tabby"
+  },
+  {
+    "id": 17,
+    "name": "Flame Point",
+    "description": "An ivory coat with bright ginger points and blue eyes.",
+    "originalBaseVariant": 3,
+    "sourceKind": "palette-derived",
+    "category": "Pointed"
+  },
+  {
+    "id": 18,
+    "name": "Amber Tortoiseshell",
+    "description": "A dark espresso saddle with bold amber and honey patches.",
+    "originalBaseVariant": 4,
+    "sourceKind": "palette-derived",
+    "category": "Tortoiseshell"
+  }
+]
