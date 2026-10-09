@@ -14,6 +14,8 @@ Build with `VITE_DEFAULT_HOUSE` if desired. This value is compiled into the app;
 
 The GitHub Actions validation workflow checks types, unit tests, browser tests, and a production build. Publishing a tag beginning with `v` runs the release workflow and uploads `kitty-house-web.zip` and `SHA256SUMS.txt` only after those checks pass. GitHub also provides source archives for the tag. Tag only reviewed source, and retain fixed tags for reproducible upgrades.
 
+Browser tests run in four independent shards on shared CI runners. The 25-cat stress scenario checks motion and a live renderer everywhere and records measured FPS. The original 25 FPS performance budget runs locally; set `KITTY_ENFORCE_FPS=1` to enforce it on a calibrated CI runner too. Shared software-rendering throughput is not treated as a hardware performance benchmark. CI allows 120 seconds per test for repeated artwork redraws.
+
 Operators should record the public repository tag and full commit SHA in their own deployment repository. Download the release archive, verify its checksum, stage it, then switch the web server to the staged build using that installation's normal procedure. Keep the previous build for rollback. Do not copy private server configuration, credentials, backups, or deployment history into this application repository.
 
 Keep the same origin when upgrading to preserve browser saves. Copying server files does not copy visitors' localStorage, and changing the domain or port starts a separate save space.
