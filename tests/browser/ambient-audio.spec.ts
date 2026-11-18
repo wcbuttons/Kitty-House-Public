@@ -28,11 +28,9 @@ test("ambient view pauses motion independently of its opt-in audio loop", async 
       return original.apply(this, args);
     };
   });
-  await page.goto("/?test=1&ambient=1");
-  await expect.poll(async () => ({
-    ready: await page.evaluate(() => !!(window as any).kitty?.ready()),
-    errors,
-  })).toEqual({ ready: true, errors: [] });
+  await page.goto("/?test=1&ambient=1", { waitUntil: "domcontentloaded" });
+  await page.waitForFunction(() => (window as any).kitty?.ready());
+  expect(errors).toEqual([]);
   const body = page.locator("body");
   const player = page.locator(".house-stage > .ambient-audio");
   await expect(body).toHaveClass(/house-fullscreen/);
