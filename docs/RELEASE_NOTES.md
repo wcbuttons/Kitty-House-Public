@@ -9,6 +9,8 @@ Download `kitty-house-web.zip` for the built application and `SHA256SUMS.txt` to
 The default home is Little House. Saved layouts belong to each browser and site origin. Live lighting uses America/Chicago; manual time is available. This release does not provide cloud saves, multiplayer, or a backend service.
 # Kitty House V2
 
+Version 2.0.1 uses six licensed field recordings for the audio loops. Sources, licenses and editing notes are included with the [recordings](../public/assets/ambience/credits.txt).
+
 - Cats investigate new spots, stretch after naps, and vary their play. Jump and landing poses follow movement progress.
 - Fullscreen adds a motion pause and a bookmarkable house-only view with `?ambient=1`.
 - Six optional soundscapes loop continuously with volume control. Outdoor rain, woodland lights and starlight respect reduced-motion settings.

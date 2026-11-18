@@ -1,9 +1,5 @@
 import type { ThemeId } from "./house-theme";
-import {
-  AMBIENT_LOOP_START,
-  AMBIENT_TRACKS,
-  renderAmbientLoop,
-} from "./ambient-track";
+import { AMBIENT_TRACKS, ambientTrackPath } from "./ambient-track";
 import "./ambient-audio.css";
 
 const VOLUME_KEY = "little-house.ambience-volume.v1";
@@ -36,7 +32,8 @@ export function mountAmbientAudio(parent: HTMLElement, theme: ThemeId) {
   const title = element.querySelector(".ambient-track")!;
   const volume = element.querySelector("input")!;
   const status = element.querySelector(".ambient-audio-status")!;
-  const trackName = AMBIENT_TRACKS[theme].name;
+  const trackName = AMBIENT_TRACKS[theme];
+  const trackUrl = import.meta.env.BASE_URL + ambientTrackPath(theme);
   title.textContent = trackName;
   volume.value = String(readVolume());
   parent.append(element);
@@ -51,9 +48,10 @@ export function mountAmbientAudio(parent: HTMLElement, theme: ThemeId) {
     gain: GainNode;
     started: number;
   } | undefined;
-  let offset = AMBIENT_LOOP_START;
+  let offset = 0;
   let pending = false;
   let request = 0;
+  let download: AbortController | undefined;
 
   function syncControls() {
     const label = playing ? "Pause ambience" : "Play ambience";
@@ -67,8 +65,8 @@ export function mountAmbientAudio(parent: HTMLElement, theme: ThemeId) {
   async function play() {
     const order = ++request;
     pending = true;
-    status.textContent = "";
-    title.textContent = trackName;
+    status.textContent = buffer ? "" : "Loading ambience recording.";
+    title.textContent = buffer ? trackName : "Loading recording…";
     syncControls();
     try {
       if (!context) {
@@ -79,13 +77,21 @@ export function mountAmbientAudio(parent: HTMLElement, theme: ThemeId) {
       }
       await context.resume();
       if (request !== order) return;
-      buffer ??= renderAmbientLoop(context, theme);
+      if (!buffer) {
+        download = new AbortController();
+        const response = await fetch(trackUrl, { signal: download.signal });
+        if (!response.ok) throw new Error(`Recording unavailable: ${response.status}`);
+        const recording = await context.decodeAudioData(await response.arrayBuffer());
+        if (request !== order) return;
+        buffer = recording;
+      }
+      title.textContent = trackName;
+      status.textContent = "";
       const now = context.currentTime;
       const source = context.createBufferSource();
       const gain = context.createGain();
       source.buffer = buffer;
       source.loop = true;
-      source.loopStart = AMBIENT_LOOP_START;
       source.connect(gain);
       gain.connect(master!);
       gain.gain.setValueAtTime(0, now);
@@ -106,6 +112,7 @@ export function mountAmbientAudio(parent: HTMLElement, theme: ThemeId) {
         void context?.suspend().catch(() => {});
     } finally {
       if (request === order) {
+        download = undefined;
         pending = false;
         syncControls();
       }
@@ -114,15 +121,16 @@ export function mountAmbientAudio(parent: HTMLElement, theme: ThemeId) {
 
   function pause(immediate = false) {
     request++;
+    download?.abort();
+    download = undefined;
     pending = false;
+    title.textContent = trackName;
+    status.textContent = "";
     if (playing && context && buffer) {
       const { source, gain, started } = playing;
       const now = context.currentTime;
-      const loopLength = buffer.duration - AMBIENT_LOOP_START;
       const elapsed = now - started;
-      offset =
-        AMBIENT_LOOP_START +
-        (offset - AMBIENT_LOOP_START + elapsed) % loopLength;
+      offset = (offset + elapsed) % buffer.duration;
       if (!immediate) {
         gain.gain.cancelScheduledValues(now);
         gain.gain.setValueAtTime(Math.min(1, elapsed / FADE_TIME), now);

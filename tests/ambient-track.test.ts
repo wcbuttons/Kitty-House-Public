@@ -1,46 +1,23 @@
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import {
-  AMBIENT_LOOP_START,
-  AMBIENT_TRACKS,
-  renderAmbientLoop,
-} from "../src/ambient-track";
-import type { ThemeId } from "../src/house-theme";
+import { AMBIENT_TRACKS, ambientTrackPath } from "../src/ambient-track";
+import { THEMES } from "../src/house-theme";
 
-const audio = {
-  createBuffer(channels: number, length: number, sampleRate: number) {
-    const samples = Array.from({ length: channels }, () => new Float32Array(length));
-    return {
-      numberOfChannels: channels,
-      length,
-      duration: length / sampleRate,
-      sampleRate,
-      getChannelData: (channel: number) => samples[channel],
-    } as AudioBuffer;
-  },
-};
-
-describe("scene ambience", () => {
-  for (const theme of Object.keys(AMBIENT_TRACKS) as ThemeId[]) {
-    it(`${theme} has a bounded stereo loop with a continuous lead-in`, () => {
-      const buffer = renderAmbientLoop(audio, theme);
-      expect(buffer.numberOfChannels).toBe(2);
-      expect(buffer.duration - AMBIENT_LOOP_START).toBe(44);
-      const loopStart = AMBIENT_LOOP_START * buffer.sampleRate;
-      const left = buffer.getChannelData(0);
-      const right = buffer.getChannelData(1);
-      expect(left[loopStart]).not.toEqual(right[loopStart]);
-      for (const samples of [left, right]) {
-        let peak = 0;
-        let power = 0;
-        for (let i = loopStart; i < samples.length; i++) {
-          peak = Math.max(peak, Math.abs(samples[i]));
-          power += samples[i] * samples[i];
-        }
-        expect(peak).toBeLessThanOrEqual(0.651);
-        expect(Math.sqrt(power / (samples.length - loopStart))).toBeGreaterThan(0.07);
-        // The last faded sample is the sample immediately before the loop resumes.
-        expect(samples.at(-1)).toBeCloseTo(samples[loopStart - 1], 6);
-      }
+describe("scene recordings", () => {
+  it("bundles a distinct credited recording for every house", () => {
+    const credits = readFileSync(
+      new URL("../public/assets/ambience/credits.txt", import.meta.url),
+      "utf8",
+    );
+    const hashes = THEMES.map(({ id }) => {
+      const path = ambientTrackPath(id);
+      const bytes = readFileSync(new URL(`../public/${path}`, import.meta.url));
+      expect(bytes.length).toBeGreaterThan(32_000);
+      expect(credits).toContain(path.split("/").at(-1)!);
+      expect(AMBIENT_TRACKS[id]).toBeTruthy();
+      return createHash("sha256").update(bytes).digest("hex");
     });
-  }
+    expect(new Set(hashes).size).toBe(THEMES.length);
+  });
 });

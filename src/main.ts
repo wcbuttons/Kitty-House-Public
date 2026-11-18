@@ -61,7 +61,7 @@ const hasClimbingDemo =
 $("#route-demo").hidden = !hasClimbingDemo;
 $(".about").insertAdjacentHTML(
   "beforeend",
-  "<p>Switch house styles above to visit another home. Each house keeps its own furniture and cats in this browser.</p>",
+  `<p>Switch house styles above to visit another home. Each house keeps its own furniture and cats in this browser.</p><p><a href="${import.meta.env.BASE_URL}assets/ambience/credits.txt">Ambience recording credits</a></p>`,
 );
 let catalog: FurnitureCatalogUI | undefined;
 let catCatalog: CatCatalogUI | undefined;
