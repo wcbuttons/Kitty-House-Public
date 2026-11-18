@@ -35,7 +35,7 @@ test("ambient view pauses motion independently of its opt-in audio loop", async 
   const player = page.locator(".house-stage > .ambient-audio");
   await expect(body).toHaveClass(/house-fullscreen/);
   expect(await page.evaluate(() => document.fullscreenElement)).toBe(null);
-  await expect(player.getByText("Forest water drops")).toBeVisible();
+  await expect(player.getByRole("combobox", { name: "Ambience sound" })).toHaveValue("cabin-v2");
   expect(await body.getAttribute("data-test-ambient-loop")).toBeNull();
 
   const recording = page.waitForResponse("**/assets/ambience/cabin-v2.mp3");
@@ -85,8 +85,57 @@ test("ambience downloads only after Play and can retry a failed recording", asyn
   const player = page.getByRole("group", { name: "Ambience audio" });
   const play = player.getByRole("button", { name: "Play ambience" });
   await play.click();
-  await expect(player.getByText("Sound unavailable")).toBeVisible();
+  await expect(player.getByRole("status")).toHaveText("Sound unavailable. Press Play to retry.");
   await play.click();
   await expect(player.getByRole("button", { name: "Pause ambience" })).toBeEnabled();
   expect(requests).toBe(2);
+});
+
+test("each house remembers its own sound and a playing selection switches tracks", async ({ page }) => {
+  await page.addInitScript(() => {
+    if (localStorage.getItem("little-house.theme.v1")) return;
+    localStorage.setItem("little-house.theme.v1", "original");
+    localStorage.setItem("little-house.ambience-track.v1:original", "constructor");
+  });
+  const requests: string[] = [];
+  page.on("request", (request) => {
+    if (request.url().includes("/assets/ambience/")) requests.push(request.url());
+  });
+  await page.goto("/?test=1", { waitUntil: "domcontentloaded" });
+  await page.waitForFunction(() => (window as any).kitty?.ready());
+  const sound = page.getByRole("combobox", { name: "Ambience sound" });
+  await expect(sound).toHaveValue("original");
+  await expect(sound.locator("option")).toHaveCount(6);
+  await sound.selectOption("cabin");
+  expect(requests).toEqual([]);
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await expect(sound).toHaveValue("cabin");
+  expect(requests).toEqual([]);
+
+  const forest = page.waitForResponse("**/assets/ambience/cabin.mp3");
+  await page.getByRole("button", { name: "Play ambience" }).click();
+  expect((await forest).ok()).toBe(true);
+  await expect(page.getByRole("button", { name: "Pause ambience" })).toBeEnabled();
+  const cricket = page.waitForResponse("**/assets/ambience/tower.mp3");
+  await sound.selectOption("tower");
+  expect((await cricket).ok()).toBe(true);
+  await expect(page.getByRole("button", { name: "Pause ambience" })).toBeEnabled();
+
+  async function visit(id: string) {
+    await page.locator("#house-theme").selectOption(id);
+    await page.waitForFunction((house) => {
+      const app = (window as any).kitty;
+      return app?.ready() && app.theme() === house;
+    }, id);
+  }
+
+  await visit("ramen");
+  await expect(sound).toHaveValue("ramen");
+  await expect(page.getByRole("button", { name: "Play ambience" })).toBeEnabled();
+  await sound.selectOption("ramen-v2");
+  await visit("original");
+  await expect(sound).toHaveValue("tower");
+  await visit("ramen");
+  await expect(sound).toHaveValue("ramen-v2");
+  expect(requests).toHaveLength(2);
 });

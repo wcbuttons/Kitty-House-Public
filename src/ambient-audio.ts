@@ -1,8 +1,9 @@
 import type { ThemeId } from "./house-theme";
-import { AMBIENT_TRACKS, ambientTrackPath } from "./ambient-track";
+import { AMBIENT_TRACKS, ambientTrackPath, isAmbientTrackId } from "./ambient-track";
 import "./ambient-audio.css";
 
 const VOLUME_KEY = "little-house.ambience-volume.v1";
+const TRACK_KEY_PREFIX = "little-house.ambience-track.v1:";
 const DEFAULT_VOLUME = 42;
 const MAX_OUTPUT_GAIN = 0.5;
 const FADE_TIME = 0.15;
@@ -25,17 +26,25 @@ export function mountAmbientAudio(parent: HTMLElement, theme: ThemeId) {
   element.setAttribute("aria-label", "Ambience audio");
   element.innerHTML = `
     <button type="button" aria-label="Play ambience" title="Play ambience">▶</button>
-    <span class="ambient-track"></span>
+    <select class="ambient-track" aria-label="Ambience sound"></select>
     <input type="range" min="0" max="100" aria-label="Ambience volume" title="Ambience volume">
     <span class="ambient-audio-status" role="status"></span>
   `;
   const toggle = element.querySelector("button")!;
-  const title = element.querySelector(".ambient-track")!;
+  const picker = element.querySelector("select")!;
   const volume = element.querySelector("input")!;
   const status = element.querySelector(".ambient-audio-status")!;
-  const trackName = AMBIENT_TRACKS[theme];
-  const trackUrl = import.meta.env.BASE_URL + ambientTrackPath(theme);
-  title.textContent = trackName;
+  const trackKey = TRACK_KEY_PREFIX + theme;
+  let track = theme;
+  try {
+    const saved = localStorage.getItem(trackKey);
+    if (isAmbientTrackId(saved)) track = saved;
+  } catch {
+    // Use the house default when the browser blocks storage.
+  }
+  for (const [id, name] of Object.entries(AMBIENT_TRACKS))
+    picker.add(new Option(name, id));
+  picker.value = track;
   volume.value = String(readVolume());
   const outputGain = () => (volume.valueAsNumber / 100) * MAX_OUTPUT_GAIN;
   parent.append(element);
@@ -67,8 +76,7 @@ export function mountAmbientAudio(parent: HTMLElement, theme: ThemeId) {
   async function play() {
     const order = ++request;
     pending = true;
-    status.textContent = buffer ? "" : "Loading ambience recording.";
-    title.textContent = buffer ? trackName : "Loading recording…";
+    status.textContent = buffer ? "" : "Loading recording…";
     syncControls();
     try {
       if (!context) {
@@ -81,13 +89,13 @@ export function mountAmbientAudio(parent: HTMLElement, theme: ThemeId) {
       if (request !== order) return;
       if (!buffer) {
         download = new AbortController();
+        const trackUrl = import.meta.env.BASE_URL + ambientTrackPath(track);
         const response = await fetch(trackUrl, { signal: download.signal, cache: "no-cache" });
         if (!response.ok) throw new Error(`Recording unavailable: ${response.status}`);
         const recording = await context.decodeAudioData(await response.arrayBuffer());
         if (request !== order) return;
         buffer = recording;
       }
-      title.textContent = trackName;
       status.textContent = "";
       const now = context.currentTime;
       const source = context.createBufferSource();
@@ -108,8 +116,7 @@ export function mountAmbientAudio(parent: HTMLElement, theme: ThemeId) {
       };
     } catch {
       if (request !== order) return;
-      title.textContent = "Sound unavailable";
-      status.textContent = "Ambience audio could not play in this browser.";
+      status.textContent = "Sound unavailable. Press Play to retry.";
       if (context?.state !== "closed")
         void context?.suspend().catch(() => {});
     } finally {
@@ -126,7 +133,6 @@ export function mountAmbientAudio(parent: HTMLElement, theme: ThemeId) {
     download?.abort();
     download = undefined;
     pending = false;
-    title.textContent = trackName;
     status.textContent = "";
     if (playing && context && buffer) {
       const { source, gain, started } = playing;
@@ -155,6 +161,21 @@ export function mountAmbientAudio(parent: HTMLElement, theme: ThemeId) {
   toggle.addEventListener("click", () => {
     if (playing) pause();
     else if (!pending) void play();
+  }, { signal });
+  picker.addEventListener("change", () => {
+    const selection = picker.value;
+    if (!isAmbientTrackId(selection) || selection === track) return;
+    const keepPlaying = pending || !!playing;
+    pause();
+    track = selection;
+    buffer = undefined;
+    offset = 0;
+    try {
+      localStorage.setItem(trackKey, selection);
+    } catch {
+      // Keep the selection for this visit.
+    }
+    if (keepPlaying) void play();
   }, { signal });
   volume.addEventListener("input", () => {
     if (context && master)

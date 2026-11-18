@@ -155,6 +155,8 @@ test("the tower fills a portrait display, supports fullscreen cat introductions 
   await page.keyboard.press("Tab");
   await expect(page.getByRole("button", { name: "Play ambience", exact: true })).toBeFocused();
   await page.keyboard.press("Tab");
+  await expect(page.getByRole("combobox", { name: "Ambience sound", exact: true })).toBeFocused();
+  await page.keyboard.press("Tab");
   await expect(page.getByRole("slider", { name: "Ambience volume", exact: true })).toBeFocused();
   await page.keyboard.press("Tab");
   await expect(page.getByRole("button", { name: "Pause motion", exact: true })).toBeFocused();

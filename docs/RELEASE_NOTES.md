@@ -9,6 +9,8 @@ Download `kitty-house-web.zip` for the built application and `SHA256SUMS.txt` to
 The default home is Little House. Saved layouts belong to each browser and site origin. Live lighting uses America/Chicago; manual time is available. This release does not provide cloud saves, multiplayer, or a backend service.
 # Kitty House V2
 
+Version 2.0.3 lets each house remember its chosen ambience from the full recording library and replaces Mountain Cabin's water recording.
+
 Version 2.0.2 uses quieter recordings with distinct, recognizable sounds and caps the player output at half its previous level for the same saved volume setting.
 
 Version 2.0.1 uses six licensed field recordings for the audio loops. Sources, licenses and editing notes are included with the [recordings](../public/assets/ambience/credits.txt).
