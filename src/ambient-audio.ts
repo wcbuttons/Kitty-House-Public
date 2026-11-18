@@ -4,6 +4,7 @@ import "./ambient-audio.css";
 
 const VOLUME_KEY = "little-house.ambience-volume.v1";
 const DEFAULT_VOLUME = 42;
+const MAX_OUTPUT_GAIN = 0.5;
 const FADE_TIME = 0.15;
 
 function readVolume() {
@@ -36,6 +37,7 @@ export function mountAmbientAudio(parent: HTMLElement, theme: ThemeId) {
   const trackUrl = import.meta.env.BASE_URL + ambientTrackPath(theme);
   title.textContent = trackName;
   volume.value = String(readVolume());
+  const outputGain = () => (volume.valueAsNumber / 100) * MAX_OUTPUT_GAIN;
   parent.append(element);
 
   const events = new AbortController();
@@ -72,14 +74,14 @@ export function mountAmbientAudio(parent: HTMLElement, theme: ThemeId) {
       if (!context) {
         context = new AudioContext();
         master = context.createGain();
-        master.gain.value = volume.valueAsNumber / 100;
+        master.gain.value = outputGain();
         master.connect(context.destination);
       }
       await context.resume();
       if (request !== order) return;
       if (!buffer) {
         download = new AbortController();
-        const response = await fetch(trackUrl, { signal: download.signal });
+        const response = await fetch(trackUrl, { signal: download.signal, cache: "no-cache" });
         if (!response.ok) throw new Error(`Recording unavailable: ${response.status}`);
         const recording = await context.decodeAudioData(await response.arrayBuffer());
         if (request !== order) return;
@@ -156,7 +158,7 @@ export function mountAmbientAudio(parent: HTMLElement, theme: ThemeId) {
   }, { signal });
   volume.addEventListener("input", () => {
     if (context && master)
-      master.gain.setTargetAtTime(volume.valueAsNumber / 100, context.currentTime, 0.035);
+      master.gain.setTargetAtTime(outputGain(), context.currentTime, 0.035);
   }, { signal });
   volume.addEventListener("change", () => {
     try {

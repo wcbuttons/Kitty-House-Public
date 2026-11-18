@@ -5,11 +5,26 @@ test("ambient view pauses motion independently of its opt-in audio loop", async 
   page.on("pageerror", (error) => errors.push(error.message));
   await page.addInitScript(() => {
     localStorage.setItem("little-house.theme.v1", "cabin-v2");
+    const createGain = BaseAudioContext.prototype.createGain;
+    let master: GainNode | undefined;
+    BaseAudioContext.prototype.createGain = function () {
+      const node = createGain.call(this);
+      master ??= node;
+      return node;
+    };
+    const setGain = AudioParam.prototype.setTargetAtTime;
+    AudioParam.prototype.setTargetAtTime = function (...args) {
+      if (this === master?.gain)
+        document.body.dataset.testAmbientGainTarget = String(args[0]);
+      return setGain.apply(this, args);
+    };
     const original = AudioBufferSourceNode.prototype.start;
     AudioBufferSourceNode.prototype.start = function (...args) {
-      if (this.loop)
+      if (this.loop) {
         document.body.dataset.testAmbientLoop =
           `${this.buffer?.duration}/${this.loopStart}`;
+        document.body.dataset.testAmbientGain = String(master?.gain.value);
+      }
       return original.apply(this, args);
     };
   });
@@ -22,7 +37,7 @@ test("ambient view pauses motion independently of its opt-in audio loop", async 
   const player = page.locator(".house-stage > .ambient-audio");
   await expect(body).toHaveClass(/house-fullscreen/);
   expect(await page.evaluate(() => document.fullscreenElement)).toBe(null);
-  await expect(player.getByText("Woodland creek")).toBeVisible();
+  await expect(player.getByText("Forest water drops")).toBeVisible();
   expect(await body.getAttribute("data-test-ambient-loop")).toBeNull();
 
   const recording = page.waitForResponse("**/assets/ambience/cabin-v2.mp3");
@@ -32,7 +47,10 @@ test("ambient view pauses motion independently of its opt-in audio loop", async 
   await expect(player.getByRole("button", { name: "Pause ambience" })).toBeEnabled();
   await expect(body).toHaveAttribute("data-test-ambient-loop", /^\d{2,}(?:\.\d+)?\/0$/);
   expect(Number((await body.getAttribute("data-test-ambient-loop"))!.split("/")[0])).toBeGreaterThan(20);
+  expect(Number(await body.getAttribute("data-test-ambient-gain"))).toBeCloseTo(0.21);
   const slider = player.getByRole("slider", { name: "Ambience volume" });
+  await slider.press("End");
+  await expect(body).toHaveAttribute("data-test-ambient-gain-target", "0.5");
   await slider.press("Home");
   await expect(slider).toHaveValue("0");
   await expect.poll(() => page.evaluate(() =>

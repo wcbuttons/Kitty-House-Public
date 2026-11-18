@@ -3,35 +3,39 @@ Kitty House V2 ambience recording credits
 Each recording below is licensed under Creative Commons Zero 1.0 (CC0).
 https://creativecommons.org/publicdomain/zero/1.0/
 
-The recordings were selected, level-matched, looped and encoded for
-Kitty House. No audio is downloaded until you press Play.
+Recordings were trimmed, sequenced where appropriate, level-adjusted and
+looped for Kitty House. Audio loads when you press Play.
 
 original.mp3 — Little House
-Continuous Light Rain on Open Window — Rural Ambience Altenthann
-TSP-Talk
-https://freesound.org/people/TSP-Talk/sounds/845501/
+Inside fireplace (Crackling) by Sadiquecat
+https://freesound.org/people/Sadiquecat/sounds/800660/
 
 cabin.mp3 — Woodland Cabin
-Birds in the Slovenian Forest - Looped
-GammaGool
-https://freesound.org/people/GammaGool/sounds/850505/
+Blackbird (isolated) by richwise
+https://freesound.org/people/richwise/sounds/811988/
 
 ramen.mp3 — Neko Ramen
-Rain falling - Awning
-prtsfr
-https://freesound.org/people/prtsfr/sounds/849799/
+SFX_BoilingWater_Loop.wav by Euphrosyyn
+https://freesound.org/people/Euphrosyyn/sounds/370217/
+Boiling Water by bolkmar
+https://freesound.org/people/bolkmar/sounds/423006/
+stirring-liquid-in-pot by BogumilaMerc
+https://freesound.org/people/BogumilaMerc/sounds/835831/
+chopsticks.wav by DJSnowgoat
+https://freesound.org/people/DJSnowgoat/sounds/345003/
 
 tower.mp3 — Moonwhisker Tower
-Night Woods
-widgetstudios
-https://freesound.org/people/widgetstudios/sounds/532301/
+cricket by FunkApache
+https://freesound.org/people/FunkApache/sounds/393389/
 
 cabin-v2.mp3 — Mountain Cabin
-Small brook, stream, water sound
-SamsterBirdies
-https://freesound.org/people/SamsterBirdies/sounds/584269/
+Dripping Water in Forest by lukiacostello
+https://freesound.org/people/lukiacostello/sounds/446254/
 
 ramen-v2.mp3 — Cat Cafe
-Clean rain in a courtyard
-xkeril
-https://freesound.org/people/xkeril/sounds/612817/
+Teacup Teapot Table Quick Pour by fthrll
+https://freesound.org/people/fthrll/sounds/786673/
+teapot and tea cup.wav by rocuma
+https://freesound.org/people/rocuma/sounds/565755/
+Tea_Stir.wav by sidequesting
+https://freesound.org/people/sidequesting/sounds/494083/

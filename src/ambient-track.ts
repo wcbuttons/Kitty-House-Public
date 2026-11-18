@@ -1,12 +1,12 @@
 import type { ThemeId } from "./house-theme";
 
 export const AMBIENT_TRACKS = {
-  original: "Rain on the window",
-  cabin: "Pines and birds",
-  ramen: "Rain on the awning",
-  tower: "Night wind and crickets",
-  "cabin-v2": "Woodland creek",
-  "ramen-v2": "Courtyard drizzle",
+  original: "Fireplace crackle",
+  cabin: "Woodland blackbird",
+  ramen: "Quiet kitchen simmer",
+  tower: "Cricket after dark",
+  "cabin-v2": "Forest water drops",
+  "ramen-v2": "Tea and ceramic cups",
 } as const satisfies Record<ThemeId, string>;
 
 export const ambientTrackPath = (theme: ThemeId) =>
