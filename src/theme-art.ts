@@ -190,7 +190,7 @@ export class ThemeArt {
         this.fireplaceFrame = frame;
       }
     }
-    this.lanterns?.update(seconds, lighting?.lanternIntensity);
+    this.lanterns?.update(seconds, (lighting ?? this.lighting)?.lanternIntensity);
     if (!lighting) return;
     this.lighting = lighting;
     const key = daylightRenderKey(lighting);

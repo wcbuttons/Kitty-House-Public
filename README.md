@@ -6,7 +6,7 @@ This repository contains the reusable application, local artwork, editable art s
 
 ## Download and run
 
-Download **kitty-house-web.zip** from [Releases](https://github.com/wcbuttons/Kitty-House-Public/releases/latest), extract it, and serve the extracted directory with a static HTTP server. For example, if Python is installed:
+Build this V2 branch from source using the instructions below. Published builds are available as **kitty-house-web.zip** from [Releases](https://github.com/wcbuttons/Kitty-House-Public/releases). To run a ZIP, extract it and serve the extracted directory with a static HTTP server. For example, if Python is installed:
 
 ```sh
 python -m http.server 8080 --bind 127.0.0.1
@@ -21,7 +21,7 @@ For the source, choose **Code → Download ZIP**, or clone this repository. Rele
 Install Node.js 22.12+ and npm, then:
 
 ```sh
-git clone https://github.com/wcbuttons/Kitty-House-Public.git
+git clone --branch v2 https://github.com/wcbuttons/Kitty-House-Public.git
 cd Kitty-House-Public
 npm ci
 npm run dev
@@ -40,8 +40,11 @@ Open http://127.0.0.1:4173/. To test from another device on your network, run `n
 
 - Little House, Woodland Cabin, Neko Ramen, Moonwhisker Tower, Mountain Cabin, and Cat Cafe.
 - Furniture placement, undo/redo, connected rooms, autonomous cat behavior, and 18 coat choices.
-- Fullscreen viewing and smoothly changing day/night artwork.
+- Fullscreen viewing, smoothly changing day/night artwork, and outdoor effects that respect the browser's reduced-motion setting.
+- An opt-in looping soundscape for every home, with play/pause and saved volume.
 - Layouts, cat rosters, selected home, and time preferences stored in this browser.
+
+Append `?ambient=1` to open directly in the house-only view. Move the pointer or tap the scene to show the controls. Use **Pause motion** to hold the cats and scenic animation in place. Set **Time of day** to a manual value to hold the lighting too. Audio continues independently until paused.
 
 Saves belong to the browser and site origin. Different domains, ports, browsers, and devices have separate saves; there is no cloud synchronization. Cat positions and moment-to-moment activity are not persisted. The live lighting clock currently follows `America/Chicago`; the time slider supports manual lighting on every host.
 

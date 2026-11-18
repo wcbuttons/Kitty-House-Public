@@ -7,3 +7,11 @@ This is the public packaging of application version 0.9.0+5. It starts a fresh a
 Download `kitty-house-web.zip` for the built application and `SHA256SUMS.txt` to verify it. Extract the ZIP and serve it over HTTP(S); the included `START_HERE.txt` gives a local Python example. GitHub's source archives contain the editable project and require Node.js to build.
 
 The default home is Little House. Saved layouts belong to each browser and site origin. Live lighting uses America/Chicago; manual time is available. This release does not provide cloud saves, multiplayer, or a backend service.
+# Kitty House V2
+
+- Cats investigate new spots, stretch after naps, and vary their play. Jump and landing poses follow movement progress.
+- Fullscreen adds a motion pause and a bookmarkable house-only view with `?ambient=1`.
+- Six optional soundscapes loop continuously with volume control. Outdoor rain, woodland lights and starlight respect reduced-motion settings.
+- The renderer shares sprite sheets across poses and reuses cached daylight and overlays. The simulation indexes navigation surfaces and reuses route-distance calculations.
+- Existing layouts, resident rosters, and time preferences remain compatible.
+

@@ -43,14 +43,22 @@ test("18 animated looks, catalog filters, saved adoption, room changes, removal 
           "drop",
           "recover",
           "anticipate",
-        ].every(
-          (state) =>
-            scene.textures.exists(`cat-${id}-${state}`) &&
-            scene.anims.exists(`cat-${id}-${state}`),
-        ),
+          "sniff",
+          "stretch",
+        ].every((state) => {
+          const animation = scene.anims.get(`cat-${id}-${state}`);
+          return animation?.frames.length > 0 &&
+            animation.frames.every(({ textureKey }: { textureKey: string }) =>
+              scene.textures.exists(textureKey),
+            );
+        }),
       );
     }),
   ).toBe(true);
+  expect(await page.evaluate(() => {
+    const { textures } = (window as any).kitty.scene;
+    return textures.getTextureKeys().filter((key: string) => /^cat-\d+-/.test(key)).length;
+  })).toBe(18 * 11);
   await page.screenshot({
     path: "docs/screenshots/cat-catalog.png",
     fullPage: true,

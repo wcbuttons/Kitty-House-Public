@@ -1,0 +1,82 @@
+.ambient-audio {
+  display: inline-flex;
+  min-width: 0;
+  max-width: 100%;
+  align-items: center;
+  gap: 7px;
+  color: #4d6357;
+  font-size: 0.75rem;
+}
+
+.ambient-audio button {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  min-width: 35px;
+  min-height: 35px;
+  padding: 0;
+  font-size: 0.8rem;
+}
+
+.ambient-audio.playing button {
+  border-color: #779881;
+  background: #e4ede1;
+}
+
+.ambient-track {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ambient-audio input[type="range"] {
+  width: 54px;
+  height: 30px;
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  accent-color: #4c785c;
+}
+
+.ambient-audio-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.house-fullscreen .house-stage > .ambient-audio {
+  position: absolute;
+  z-index: 2;
+  right: max(12px, env(safe-area-inset-right));
+  bottom: max(12px, env(safe-area-inset-bottom));
+  max-width: calc(100% - 24px);
+  padding: 5px 9px 5px 5px;
+  border: 1px solid #8fa69a66;
+  border-radius: 9px;
+  background: #163840ed;
+  color: #edf1df;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.house-fullscreen .house-stage > .ambient-audio button {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.house-fullscreen .house-stage > .ambient-audio input {
+  height: 44px;
+  accent-color: #abc5ab;
+}
+
+.house-fullscreen .house-stage.controls-visible > .ambient-audio,
+.house-fullscreen .house-stage > .ambient-audio:focus-within {
+  opacity: 1;
+  pointer-events: auto;
+}

@@ -17,6 +17,7 @@ import { HouseScene } from "./scene";
 import { FurnitureCatalogUI } from "./catalog";
 import { CatCatalogUI } from "./cat-catalog";
 import { FullscreenView } from "./fullscreen";
+import { mountAmbientAudio } from "./ambient-audio";
 import { MAX_CATS, type CatProfile } from "./cat-model";
 import { ACTIVE_THEME, THEMES, setActiveTheme } from "./house-theme";
 import { VIEW_FRAME } from "./view-frame";
@@ -25,9 +26,9 @@ type HouseEditSnapshot = { layout: Layout; cats: CatProfile[] };
 
 const app = document.querySelector<HTMLDivElement>("#app")!;
 app.innerHTML = `
-<header class="topbar"><a class="brand" href="./" aria-label="Little House home"><span class="brand-mark">⌂</span><span>little house<span class="brand-sub">A HOME FOR CURIOUS CATS</span></span></a><div class="header-actions"><span class="live"><i></i><span id="cat-count">12</span> cats at home</span><button id="edit" class="primary">▦ &nbsp; Edit house</button></div></header>
-<main><div class="scene-bar"><div class="place-name"><span class="small-label">WELCOME HOME</span><h1>Make yourself comfortable.</h1></div><div class="view-controls"><button id="pause" aria-label="Pause simulation" title="Pause simulation">Ⅱ</button><button id="zoom-out" aria-label="Zoom out">−</button><button id="fit">Whole house</button><button id="zoom-in" aria-label="Zoom in">+</button><button id="fullscreen" aria-label="Fullscreen house" aria-pressed="false" title="Fullscreen house · Esc to return" disabled><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg><span>Fullscreen</span></button></div></div>
-<div class="workspace"><section class="house-stage" tabindex="-1" aria-label="Interactive kitty house"><div id="game" role="img" aria-label="Four rooms and an attic with animated cats and movable furniture"></div><div id="tip" class="stage-tip">Click a cat to get acquainted.</div><div id="debug-stats" hidden></div><div class="fullscreen-controls"><span id="fullscreen-hint"></span><button id="exit-fullscreen" aria-label="Exit fullscreen">↙ &nbsp; Exit fullscreen</button></div></section>
+<header class="topbar"><a class="brand" href="./" aria-label="Kitty House home"><span class="brand-mark">⌂</span><span>Kitty House V2<span class="brand-sub">A HOME FOR CURIOUS CATS</span></span></a><div class="header-actions"><span class="live"><i></i><span id="cat-count">12</span> cats at home</span><button id="edit" class="primary">▦ &nbsp; Edit house</button></div></header>
+<main><div class="scene-bar"><div class="place-name"><span class="small-label">WELCOME HOME</span><h1>Make yourself comfortable.</h1></div><div class="view-controls"><button id="pause" aria-label="Pause simulation" title="Pause simulation">Ⅱ</button><button id="zoom-out" aria-label="Zoom out">−</button><button id="fit">Whole house</button><button id="zoom-in" aria-label="Zoom in">+</button><button id="fullscreen" aria-label="Fullscreen house" aria-pressed="false" title="Fullscreen house · Esc to return" disabled><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg><span>Ambient view</span></button></div></div>
+<div class="workspace"><section class="house-stage" tabindex="-1" aria-label="Interactive kitty house"><div id="game" role="img" aria-label="Four rooms and an attic with animated cats and movable furniture"></div><div id="tip" class="stage-tip">Click a cat to get acquainted.</div><div id="debug-stats" hidden></div><div class="fullscreen-controls"><span id="fullscreen-hint"></span><button id="ambient-pause" type="button">Pause motion</button><button id="exit-fullscreen" aria-label="Exit fullscreen">↙ &nbsp; Exit fullscreen</button></div></section>
 <aside id="editor" hidden aria-label="Furniture editor"><div class="drawer-head"><div><span class="small-label">MAKE ROOM FOR MISCHIEF</span><h2>Arrange the house</h2></div><button id="exit-edit" aria-label="Exit edit mode">×</button></div><p class="drawer-hint">Browse the catalog to add furniture, or choose In the house to move and remove pieces.</p><div class="editor-kinds" role="tablist" aria-label="Edit categories"><button id="furniture-mode" role="tab" aria-selected="true" aria-controls="furniture-tools">Furniture</button><button id="cats-mode" role="tab" aria-selected="false" aria-controls="cat-tools" tabindex="-1">Cats</button></div><div class="history-row"><button id="undo" disabled>↶ Undo</button><button id="redo" disabled>↷ Redo</button><button id="reset">Reset layout</button></div><div id="furniture-tools" role="tabpanel" aria-labelledby="furniture-mode"><form id="placement" hidden><div class="selection-heading"><strong id="piece-name"></strong><span id="anchor-badge"></span></div><label>Room<select id="room">${ROOMS.map((r) => `<option value="${r.id}">${r.name}</option>`).join("")}</select></label><div class="coordinates"><label>Across<input id="grid-x" type="number" step="1" min="0" value="0"/></label><label>Above floor<input id="grid-y" type="number" step="1" min="0" value="0"/></label></div><div id="placement-status" role="status"></div><div class="piece-actions"><button id="apply" class="primary" type="submit">Place piece</button><button id="flip" type="button">⇆ Flip</button><button id="remove" type="button">Remove</button><button id="cancel-piece" type="button">Cancel</button></div></form><section id="catalog" aria-label="Furniture catalog"></section></div><section id="cat-tools" role="tabpanel" aria-labelledby="cats-mode" hidden></section><div class="save-row"><span id="save-state">Saved on this browser</span><button id="save" class="primary">Save layout</button></div></aside>
 <aside id="inspector" class="inspector" hidden aria-label="Cat details"><button id="close-inspector" class="close" aria-label="Close cat details">×</button><div class="cat-portrait" id="cat-portrait"></div><span class="small-label">A LITTLE INTRODUCTION</span><h2 id="cat-name"></h2><p id="cat-activity"></p><div id="cat-traits"></div></aside></div>
 <footer><div id="activity"><span class="activity-dot"></span><span>A little wandering. A little napping. A very good day.</span></div><div class="footer-actions"><span id="furniture-count"></span><button id="debug" aria-pressed="false">Show paths</button><button id="stress" hidden>25 cats</button></div></footer>
@@ -71,6 +72,8 @@ const storage = new HouseStorage(),
 const daylight = new DaylightClock();
 const timeControls = $<HTMLDetailsElement>("#time-controls");
 const timeHome = timeControls.parentElement!;
+const ambientAudio = mountAmbientAudio(timeHome, ACTIVE_THEME.id);
+import.meta.hot?.dispose(ambientAudio.dispose);
 const timeSlider = $<HTMLInputElement>("#time-hour");
 const timePanel = $("#time-panel");
 let endOfDaySelected = false;
@@ -371,6 +374,8 @@ const actionNames: Record<string, string> = {
   sleep: "Enjoying a well-earned nap",
   sit: "Sitting pretty",
   groom: "Washing up",
+  sniff: "Investigating a new spot",
+  stretch: "Stretching after a nap",
   scratch: "Having a good scratch",
   perch: "Watching the world go by",
   hide: "Claiming a hideaway",
@@ -486,6 +491,9 @@ const scene = new HouseScene(
       themePicker.disabled = false;
       syncHistory();
       if (storageWarning) toast(storageWarning);
+      // A direct link uses the browser viewport. Native fullscreen still
+      // requires the visitor to press the fullscreen button.
+      if (params.get("ambient") === "1") ambientView.openAmbientView();
     },
   },
   daylight,
@@ -665,20 +673,22 @@ $("#save").onclick = () => {
           : "Layout saved in this browser.",
     );
 };
-$("#pause").onclick = () => {
+function toggleMotion() {
   sim.paused = !sim.paused;
+  const label = sim.paused ? "Resume simulation" : "Pause simulation";
   $("#pause").textContent = sim.paused ? "▶" : "Ⅱ";
-  $("#pause").setAttribute(
-    "aria-label",
-    sim.paused ? "Resume simulation" : "Pause simulation",
-  );
-};
+  $("#pause").setAttribute("aria-label", label);
+  $("#pause").title = label;
+  $("#ambient-pause").textContent = sim.paused ? "Resume motion" : "Pause motion";
+}
+$("#pause").onclick = toggleMotion;
+$("#ambient-pause").onclick = toggleMotion;
 $("#zoom-in").onclick = () => scene.zoom(0.15);
 $("#zoom-out").onclick = () => scene.zoom(-0.15);
 $("#fit").onclick = () => scene.fit();
 let previousZoom = 1;
 const inspectorHome = $("#inspector").parentElement!;
-new FullscreenView(
+const ambientView = new FullscreenView(
   $(".house-stage"),
   $<HTMLButtonElement>("#fullscreen"),
   $<HTMLButtonElement>("#exit-fullscreen"),
@@ -692,10 +702,10 @@ new FullscreenView(
       scene.fit();
       // Native fullscreen only renders descendants of the fullscreen element.
       $(".house-stage").append($("#inspector"));
-      $(".house-stage").append(timeControls);
+      $(".house-stage").append(timeControls, ambientAudio.element);
     } else {
       inspectorHome.append($("#inspector"));
-      timeHome.append(timeControls);
+      timeHome.append(timeControls, ambientAudio.element);
       scene.zoom(previousZoom - scene.zoomLevel);
     }
     timeControls.open = false;
@@ -826,15 +836,19 @@ $("#restore-demo").onclick = () => {
   $("#restore-demo").hidden = true;
   $("#route-status").textContent = "";
 };
+const activity = $("#activity > span:last-child");
+const activityCat = document.createElement("strong");
+const activityDescription = document.createTextNode("");
+let renderedActivity: (typeof sim.events)[number] | undefined;
 window.setInterval(() => {
-  if (!ready) return;
+  if (!ready || document.hidden) return;
   updateInspector();
   const latest = sim.events[0];
-  if (latest) {
-    $("#activity").innerHTML =
-      '<span class="activity-dot"></span><span><strong></strong></span>';
-    $("#activity strong").textContent = latest.cat;
-    $("#activity strong").after(document.createTextNode(` ${latest.text}.`));
+  if (latest && latest !== renderedActivity) {
+    if (!renderedActivity) activity.replaceChildren(activityCat, activityDescription);
+    renderedActivity = latest;
+    activityCat.textContent = latest.cat;
+    activityDescription.data = ` ${latest.text}.`;
   }
   if (scene.debug)
     $("#debug-stats").textContent =

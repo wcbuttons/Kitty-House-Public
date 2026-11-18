@@ -53,7 +53,7 @@ export class FullscreenView {
           current < 0
             ? event.shiftKey
               ? controls.length - 1
-              : 0
+              : Math.max(0, controls.indexOf(this.exitButton))
             : (current + (event.shiftKey ? -1 : 1) + controls.length) %
               controls.length;
         controls[next]?.focus({ preventScroll: true });
@@ -83,7 +83,11 @@ export class FullscreenView {
     }, 2500);
   }
 
-  private async enter() {
+  openAmbientView() {
+    void this.enter(false);
+  }
+
+  private async enter(requestNative = true) {
     if (this.active) return;
     this.active = true;
     this.scrollY = window.scrollY;
@@ -93,6 +97,7 @@ export class FullscreenView {
     this.onChange(true);
     this.stage.focus({ preventScroll: true });
     this.revealControls();
+    if (!requestNative) return;
     try {
       if (!this.stage.requestFullscreen) throw new Error("Unavailable");
       await this.stage.requestFullscreen();

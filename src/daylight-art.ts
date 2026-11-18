@@ -323,6 +323,10 @@ export class DaylightArt {
     return canvas;
   }
 
+  get skyMask(): HTMLCanvasElement | undefined {
+    return this.maskReady ? this.mask : undefined;
+  }
+
   update(state: DaylightState): void {
     if (this.destroyed) return;
     const key = daylightRenderKey(state);

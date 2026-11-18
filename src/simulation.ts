@@ -32,7 +32,6 @@ import {
   clamp,
   findPath,
   routeValid,
-  reachableSurfaces,
   type Edge,
   type Goal,
   type Graph,
@@ -47,7 +46,9 @@ export type CatState =
   | "cross"
   | "climb"
   | "wait"
-  | "anticipate";
+  | "anticipate"
+  | "sniff"
+  | "stretch";
 export interface CatSocial {
   partnerId: string;
   kind: "greet" | "company";
@@ -143,9 +144,12 @@ export const NAMES = [
   "Ziggy",
 ];
 export class Random {
-  constructor(public seed = 47) {}
+  constructor(public seed = 47) {
+    this.seed = seed >>> 0;
+  }
   next() {
-    let t = (this.seed += 0x6d2b79f5);
+    this.seed = (this.seed + 0x6d2b79f5) >>> 0;
+    let t = this.seed;
     t = Math.imul(t ^ (t >>> 15), t | 1);
     t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
@@ -162,6 +166,11 @@ export class Simulation {
   recoveries = 0;
   private nextCatId = 0;
   private socialPairs = new Map<string, number>();
+  private navigation?: {
+    graph: Graph;
+    surfaces: Map<string, Surface>;
+    passageDistances: Map<string, Map<string, number>>;
+  };
   events: { time: number; cat: string; text: string }[] = [];
   constructor(
     public layout: Layout,
@@ -379,7 +388,37 @@ export class Simulation {
     });
   }
   surface(id: string) {
-    return this.graph.surfaces.find((s) => s.id === id);
+    return this.navigationIndex().surfaces.get(id);
+  }
+  private navigationIndex() {
+    if (this.navigation?.graph !== this.graph) {
+      this.navigation = {
+        graph: this.graph,
+        surfaces: new Map(this.graph.surfaces.map((surface) => [surface.id, surface])),
+        passageDistances: new Map(),
+      };
+    }
+    return this.navigation;
+  }
+  private passageDistances(from: string) {
+    const cache = this.navigationIndex().passageDistances;
+    const cached = cache.get(from);
+    if (cached) return cached;
+    // Non-passage edges are free here. Revisit nodes when a route needs
+    // fewer doorway crossings, independent of its physical walk length.
+    const distances = new Map([[from, 0]]);
+    const queue = [from];
+    for (let index = 0; index < queue.length; index++) {
+      const current = queue[index];
+      for (const edge of this.graph.adjacency.get(current) ?? []) {
+        const distance = distances.get(current)! + Number(!!edge.passage);
+        if (distance >= (distances.get(edge.to) ?? Infinity)) continue;
+        distances.set(edge.to, distance);
+        queue.push(edge.to);
+      }
+    }
+    cache.set(from, distances);
+    return distances;
   }
   occupied(goal: Goal, cat: Cat) {
     return this.cats.some(
@@ -441,11 +480,8 @@ export class Simulation {
       this.elapsed < c.socialCooldown
     )
       return false;
-    for (const [pair, expires] of this.socialPairs)
-      if (expires <= this.elapsed) this.socialPairs.delete(pair);
     const willing = this.cats
       .filter((other) => {
-        const pair = [c.id, other.id].sort().join(":");
         return (
           other !== c &&
           !other.social &&
@@ -462,9 +498,9 @@ export class Simulation {
                   (edge) => !edge.passage && edge.to === other.surfaceId,
                 ))) &&
           ["idle", "sit", "perch"].includes(other.state) &&
-          other.timer > 6 &&
-          Math.abs(other.x - c.x) < 5 &&
-          this.elapsed >= (this.socialPairs.get(pair) ?? 0)
+          other.timer > 4 &&
+          Math.abs(other.x - c.x) < 6 &&
+          this.elapsed >= (this.socialPairs.get(socialPairKey(c, other)) ?? 0)
         );
       })
       .sort((a, b) => Math.abs(a.x - c.x) - Math.abs(b.x - c.x));
@@ -478,7 +514,7 @@ export class Simulation {
           goal.action === "sit" &&
           !goal.interaction &&
           Math.abs(goal.x - partner.x) >= 1.15 &&
-          Math.abs(goal.x - partner.x) <= 2.4 &&
+          Math.abs(goal.x - partner.x) <= 2.7 &&
           !this.occupied(goal, c) &&
           this.settlingClear(goal, c),
       );
@@ -505,8 +541,10 @@ export class Simulation {
       };
       const cooldown = this.elapsed + 150 + this.random.next() * 180;
       c.socialCooldown = partner.socialCooldown = cooldown;
+      for (const [pair, expires] of this.socialPairs)
+        if (expires <= this.elapsed) this.socialPairs.delete(pair);
       this.socialPairs.set(
-        [c.id, partner.id].sort().join(":"),
+        socialPairKey(c, partner),
         this.elapsed + 600,
       );
       return true;
@@ -529,7 +567,7 @@ export class Simulation {
       !["idle", "sit", "perch"].includes(partner.state) ||
       partner.surfaceId !== c.surfaceId ||
       Math.abs(partner.x - c.x) < 1.1 ||
-      Math.abs(partner.x - c.x) > 2.5
+      Math.abs(partner.x - c.x) > 2.8
     ) {
       this.endSocial(c);
       return false;
@@ -593,20 +631,38 @@ export class Simulation {
   }
   choose(c: Cat) {
     if (this.trySocial(c)) return;
-    const reachable = reachableSurfaces(this.graph, c.surfaceId);
-    let candidates = this.graph.goals.filter(
-      (g) =>
-        reachable.has(g.surfaceId) &&
-        !this.occupied(g, c) &&
-        this.settlingClear(g, c),
+    const distances = this.passageDistances(c.surfaceId);
+    const neighbors = this.cats.filter((other) => other !== c);
+    const reservedSlots = new Set(neighbors.map((other) => other.goal?.key));
+    const reservedProps = new Set(
+      neighbors.map((other) => other.goal?.interaction?.furnitureId),
     );
+    const { surfaces } = this.navigationIndex();
+    const resting = neighbors.filter(
+      (other) => !other.move && other.state !== "walk" && other.state !== "anticipate",
+    );
+    let candidates = this.graph.goals.filter((goal) => {
+      if (
+        !distances.has(goal.surfaceId) ||
+        reservedSlots.has(goal.key) ||
+        (goal.interaction && reservedProps.has(goal.interaction.furnitureId))
+      )
+        return false;
+      const surface = surfaces.get(goal.surfaceId)!;
+      return !resting.some(
+        (other) =>
+          other.roomId === surface.roomId &&
+          Math.abs(other.y - surface.y) < 0.1 &&
+          Math.abs(other.x - goal.x) < 0.75,
+      );
+    });
     // Empty or heavily edited houses still provide a safe way for a tired cat to rest.
     if (!candidates.some((goal) => goal.action === "sleep"))
       candidates.push(
         ...candidates
           .filter(
             (goal) =>
-              goal.action === "sit" && !this.surface(goal.surfaceId)?.owner,
+             goal.action === "sit" && !surfaces.get(goal.surfaceId)?.owner,
           )
           .map((goal) => ({ ...goal, action: "sleep" as const })),
       );
@@ -621,32 +677,32 @@ export class Simulation {
     );
     if (action)
       candidates = candidates.filter((goal) => goal.action === action);
-    const distances = new Map([[c.surfaceId, 0]]);
-    const queue = [c.surfaceId];
-    for (let index = 0; index < queue.length; index++) {
-      const from = queue[index];
-      for (const edge of this.graph.adjacency.get(from) ?? []) {
-        const distance = distances.get(from)! + (edge.passage ? 1 : 0);
-        if (distance < (distances.get(edge.to) ?? Infinity)) {
-          distances.set(edge.to, distance);
-          queue.push(edge.to);
-        }
-      }
-    }
     const rooms = new Map<string, number>();
     for (const goal of candidates) {
-      const room = this.surface(goal.surfaceId)!.roomId;
+      const room = surfaces.get(goal.surfaceId)!.roomId;
       rooms.set(
         room,
         Math.min(rooms.get(room) ?? Infinity, distances.get(goal.surfaceId)!),
       );
     }
     const preferredRoom = chooseRoamingRoom(c, rooms, () => this.random.next());
+    const furnitureById = new Map(
+      this.layout.furniture.map((piece) => [piece.instanceId, piece.definitionId]),
+    );
+    const companyBySurface = new Map<string, number>();
+    for (const other of neighbors) {
+      const { surfaceId } = other;
+      companyBySurface.set(surfaceId, (companyBySurface.get(surfaceId) ?? 0) + 1);
+      const target = other.goal?.surfaceId;
+      if (target && target !== surfaceId)
+        companyBySurface.set(target, (companyBySurface.get(target) ?? 0) + 1);
+    }
+    const recentSurfaces = c.visited.slice(-3);
     const scored = candidates.map((g) => {
-      const s = this.surface(g.surfaceId)!;
+      const s = surfaces.get(g.surfaceId)!;
       const owner = g.interaction?.furnitureId ?? s.owner;
-      const item = this.layout.furniture.find((f) => f.instanceId === owner);
-      const definition = item && defById(item.definitionId);
+      const definitionId = owner && furnitureById.get(owner);
+      const definition = definitionId ? defById(definitionId) : undefined;
       let w = 1;
       if (s.roomId === preferredRoom) w *= 3;
       if (g.action === "sleep" && definition?.category === "Comfort") w *= 3.5;
@@ -657,16 +713,12 @@ export class Simulation {
       if (s.id !== c.surfaceId && c.energy > 0.35) w *= 1 + c.curiosity * 0.5;
       // Remember places, not only action slots: do not shuttle between the two ends of one sofa.
       if (c.recent.includes(g.key)) w *= 0.3;
-      if (c.visited.slice(-3).includes(s.id)) w *= 0.7;
+      if (recentSurfaces.includes(s.id)) w *= 0.7;
       const travel =
         (distances.get(s.id) ?? 0) * 6 +
         (s.roomId === c.roomId ? Math.abs(g.x - c.x) + Math.abs(s.y - c.y) : 8);
       w /= 1 + travel * (c.energy < 0.25 ? 0.16 : 0.045);
-      const company = this.cats.filter(
-        (other) =>
-          other !== c &&
-          (other.goal?.surfaceId === s.id || other.surfaceId === s.id),
-      ).length;
+      const company = companyBySurface.get(s.id) ?? 0;
       w *= Math.max(0.2, 1 + company * (c.sociability - 0.55) * 0.5);
       return { value: g, weight: w };
     });
@@ -923,7 +975,23 @@ export class Simulation {
     if (this.settleSocial(c)) return;
     // A declined social approach may have released its temporary goal.
     if (!c.goal) return;
+    if (
+      c.autonomous &&
+      !goal.interaction &&
+      (goal.action === "play" || goal.action === "perch") &&
+      c.curiosity >= 0.42 &&
+      !c.visited.slice(-5).includes(goal.surfaceId)
+    ) {
+      this.startShortActivity(c, "sniff", 2 + c.curiosity);
+      return;
+    }
     this.startActivity(c, goal);
+  }
+  private startShortActivity(c: Cat, action: "sniff" | "stretch", seconds: number) {
+    c.state = action;
+    c.timer = seconds;
+    c.actionElapsed = 0;
+    c.actions[action] = (c.actions[action] ?? 0) + 1;
   }
   private startActivity(c: Cat, goal: Goal) {
     c.goal = goal;
@@ -946,7 +1014,24 @@ export class Simulation {
   }
   private finishActivity(c: Cat) {
     this.endSocial(c);
-    const previous = c.state as Action;
+    if (c.state === "sniff") {
+      if (c.goal && !this.occupied(c.goal, c) && this.settlingClear(c.goal, c)) {
+        this.startActivity(c, c.goal);
+        return;
+      }
+      c.state = "idle";
+    }
+    if (
+      c.state === "sleep" &&
+      c.autonomous &&
+      c.goal &&
+      !c.goal.interaction &&
+      (c.actions.sleep ?? 0) % 3 !== 2
+    ) {
+      this.startShortActivity(c, "stretch", 2 + c.laziness * 1.4);
+      return;
+    }
+    const previous = c.state === "stretch" ? "sleep" : (c.state as Action);
     c.lastAction = previous;
     const surface = this.surface(c.surfaceId);
     const follow =
@@ -973,8 +1058,8 @@ export class Simulation {
     this.choose(c);
   }
   step(rawDelta: number) {
-    if (this.paused) return;
-    const dt = Math.min(Math.max(rawDelta, 0), 0.05);
+    if (this.paused || !Number.isFinite(rawDelta) || rawDelta <= 0) return;
+    const dt = Math.min(rawDelta, 0.05);
     this.elapsed += dt;
     for (const c of this.cats) {
       c.awayFor = c.roomId === c.homeRoomId ? 0 : c.awayFor + dt;
@@ -1171,4 +1256,8 @@ export class Simulation {
       events: this.events,
     });
   }
+}
+
+function socialPairKey(a: Cat, b: Cat) {
+  return a.id < b.id ? a.id + ":" + b.id : b.id + ":" + a.id;
 }

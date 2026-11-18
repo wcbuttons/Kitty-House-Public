@@ -18,11 +18,11 @@ import { arcPoint, type Edge } from "./navigation";
 import { Simulation, type Cat } from "./simulation";
 import { ACTIVE_THEME } from "./house-theme";
 import { ThemeArt, preloadThemeArt } from "./theme-art";
-import { VIEW_CENTER } from "./view-frame";
+import { VIEW_CENTER, VIEW_FRAME } from "./view-frame";
 import { CAT_ANIMATIONS, catPose } from "./cat-presentation";
 import { DaylightClock, daylightAt, type DaylightState } from "./daylight";
 import { DaylightArt } from "./daylight-art";
-import { VIEW_FRAME } from "./view-frame";
+import { AmbienceArt } from "./ambience-art";
 type Callbacks = {
   selectCat: (c: Cat | null) => void;
   selectFurniture: (f: Furniture) => void;
@@ -30,6 +30,16 @@ type Callbacks = {
   commit: (f: Furniture) => void;
   ready: () => void;
 };
+
+// Several poses use the same sheet with a different clock or body transform.
+// Decode and upload that sheet once per coat while preserving the pose keys.
+const spriteSheets = new Map<string, string>();
+const texturesByPose = new Map<string, string>();
+for (const [pose, [file]] of Object.entries(CAT_ANIMATIONS)) {
+  if (!spriteSheets.has(file)) spriteSheets.set(file, pose);
+  texturesByPose.set(pose, spriteSheets.get(file)!);
+}
+
 export class HouseScene extends Phaser.Scene {
   edit = false;
   debug = false;
@@ -44,8 +54,17 @@ export class HouseScene extends Phaser.Scene {
   private originGhost!: Phaser.GameObjects.Graphics;
   private previewArt!: Phaser.GameObjects.Graphics;
   private overlay!: Phaser.GameObjects.Graphics;
+  private selectionArt!: Phaser.GameObjects.Graphics;
+  private overlayGraph?: Simulation["graph"];
+  private overlayMode = -1;
+  private selectionVersion = "";
+  private selectionPath?: readonly Edge[];
+  private lightingDirty = true;
+  private catTint = 0xffffff;
+  private readonly ladderAngles = new WeakMap<Edge, number>();
   private themeArt?: ThemeArt;
   private daylightArt?: DaylightArt;
+  private ambienceArt?: AmbienceArt;
   private ambient?: Phaser.GameObjects.Rectangle;
   private lighting: DaylightState = {
     ...daylightAt(23),
@@ -71,7 +90,7 @@ export class HouseScene extends Phaser.Scene {
   preload() {
     preloadThemeArt(this);
     for (const { id: v } of CAT_LOOKS)
-      for (const [state, [file]] of Object.entries(CAT_ANIMATIONS))
+      for (const [file, state] of spriteSheets)
         this.load.spritesheet(
           `cat-${v}-${state}`,
           `${import.meta.env.BASE_URL}assets/cats/Cat-${v}/Cat-${v}-${file}.png`,
@@ -89,6 +108,7 @@ export class HouseScene extends Phaser.Scene {
     this.originGhost = this.add.graphics().setDepth(11).setAlpha(0.23);
     this.previewArt = this.add.graphics().setDepth(39);
     this.overlay = this.add.graphics().setDepth(40);
+    this.selectionArt = this.add.graphics().setDepth(41);
     if (ACTIVE_THEME.id !== "original") this.themeArt = new ThemeArt(this);
     for (const { id: v } of CAT_LOOKS)
       for (const [state, [, frames, frameRate]] of Object.entries(
@@ -96,7 +116,7 @@ export class HouseScene extends Phaser.Scene {
       ))
         this.anims.create({
           key: `cat-${v}-${state}`,
-          frames: this.anims.generateFrameNumbers(`cat-${v}-${state}`, {
+          frames: this.anims.generateFrameNumbers(`cat-${v}-${texturesByPose.get(state)}`, {
             start: 0,
             end: frames - 1,
           }),
@@ -105,6 +125,8 @@ export class HouseScene extends Phaser.Scene {
         });
     this.drawHouse();
     this.daylightArt = new DaylightArt(this, ACTIVE_THEME.id, VIEW_FRAME);
+    const skyMask = this.daylightArt.skyMask;
+    if (skyMask) this.ambienceArt = new AmbienceArt(this, ACTIVE_THEME.id, VIEW_FRAME, skyMask);
     if (ACTIVE_THEME.id === "original") {
       this.ambient = this.add
         .rectangle(
@@ -121,7 +143,11 @@ export class HouseScene extends Phaser.Scene {
         .setAlpha(0)
         .setName("house-ambient-light");
     }
-    this.events.once("shutdown", () => this.daylightArt?.destroy());
+    const stopLighting = this.daylight?.subscribe((state) => {
+      this.lighting = state;
+      this.lightingDirty = true;
+    });
+    if (stopLighting) this.events.once("shutdown", stopLighting);
     this.drawFurniture();
     this.input.on("pointerdown", (p: Phaser.Input.Pointer) => this.down(p));
     this.input.on("pointermove", (p: Phaser.Input.Pointer) => this.move(p));
@@ -210,10 +236,10 @@ export class HouseScene extends Phaser.Scene {
   drawHouse() {
     const g = this.art;
     g.clear();
-    this.roomLabels.forEach((t) => t.destroy());
-    this.roomLabels = [];
+    const addLabels = this.roomLabels.length === 0;
     if (this.themeArt) {
       this.themeArt.drawHouse();
+      if (!addLabels) return;
       for (const room of ROOMS) {
         const label = this.text(
           room.attic ? room.x + (room.width * CELL) / 2 : room.x + 12,
@@ -270,11 +296,10 @@ export class HouseScene extends Phaser.Scene {
           r.floor - 35,
         );
         this.window(r, 12.5, 5.8);
-        this.roomLabels.push(
-          this.text(r.x + 14, top + 12, r.name.toUpperCase(), 12),
-        );
+        if (addLabels)
+          this.roomLabels.push(this.text(r.x + 14, top + 12, r.name.toUpperCase(), 12));
       } else {
-        this.roomLabels.push(this.text(477, 176, "THE LITTLE ATTIC", 12));
+        if (addLabels) this.roomLabels.push(this.text(477, 176, "THE LITTLE ATTIC", 12));
         this.window(r, 15.1, 4.6);
       }
       g.fillStyle(0xdec291).fillRect(r.x - 5, r.floor, r.width * CELL + 10, 7);
@@ -310,9 +335,10 @@ export class HouseScene extends Phaser.Scene {
       g.fillStyle(0xd6b580).fillCircle(x + 6, 342, 2);
       g.fillCircle(x + 6, 530, 2);
     }
-    this.roomLabels.push(
-      this.text(452, 751, "A QUIET LITTLE CORNER OF THE WORLD", 12, "#a9c0b9"),
-    );
+    if (addLabels)
+      this.roomLabels.push(
+        this.text(452, 751, "A QUIET LITTLE CORNER OF THE WORLD", 12, "#a9c0b9"),
+      );
     this.roomLabels.forEach((label) => label.setVisible(!this.presentation));
   }
   drawPiece(g: Phaser.GameObjects.Graphics, f: Furniture) {
@@ -549,100 +575,138 @@ export class HouseScene extends Phaser.Scene {
         g.fillStyle(0xffe5ad).fillCircle(p.x, p.y - 3, 2);
       }
     }
-    const chosen = this.sim.cats.find((c) => c.id === this.selectedCat);
-    if (chosen) {
-      const r = roomById(chosen.roomId),
-        p = worldPoint(r, chosen.x, chosen.y);
-      g.lineStyle(2, 0xf6d996).strokeEllipse(p.x, p.y + 1, 38, 10);
-      if (chosen.goal) {
-        const s = this.sim.surface(chosen.goal.surfaceId);
-        if (s) {
-          const q = worldPoint(roomById(s.roomId), chosen.goal.x, s.y);
-          g.lineStyle(2, 0xf6d996, 0.8).strokeCircle(q.x, q.y - 10, 5);
-        }
-      }
-      if (this.debug)
-        for (const e of chosen.path) {
-          g.lineStyle(3, 0xffe4a0);
-          g.strokePoints(
-            Array.from({ length: 18 }, (_, i) => {
-              const p = this.edgePoint(e, i / 17);
-              return new Phaser.Math.Vector2(p.x, p.y);
-            }),
-          );
-        }
+  }
+
+  private drawSelection(chosen?: Cat) {
+    const g = this.selectionArt;
+    if (!chosen || this.presentation) {
+      if (this.selectionVersion) g.clear();
+      this.selectionVersion = "";
+      return;
     }
+    const key = [chosen.id, chosen.roomId, chosen.x, chosen.y,
+      chosen.goal?.surfaceId, chosen.goal?.x, chosen.path.length, this.debug].join("|");
+    if (key === this.selectionVersion && chosen.path === this.selectionPath) return;
+    this.selectionVersion = key;
+    this.selectionPath = chosen.path;
+    g.clear();
+    const r = roomById(chosen.roomId),
+      p = worldPoint(r, chosen.x, chosen.y);
+    g.lineStyle(2, 0xf6d996).strokeEllipse(p.x, p.y + 1, 38, 10);
+    if (chosen.goal) {
+      const s = this.sim.surface(chosen.goal.surfaceId);
+      if (s) {
+        const q = worldPoint(roomById(s.roomId), chosen.goal.x, s.y);
+        g.lineStyle(2, 0xf6d996, 0.8).strokeCircle(q.x, q.y - 10, 5);
+      }
+    }
+    if (this.debug)
+      for (const e of chosen.path) {
+        g.lineStyle(3, 0xffe4a0);
+        g.strokePoints(
+          Array.from({ length: 18 }, (_, i) => {
+            const p = this.edgePoint(e, i / 17);
+            return new Phaser.Math.Vector2(p.x, p.y);
+          }),
+        );
+      }
   }
   update(_time: number, delta: number) {
     this.sim.step(delta / 1000);
-    if (this.daylight) this.lighting = this.daylight.snapshot();
-    this.daylightArt?.update(this.lighting);
-    this.themeArt?.update(this.sim.elapsed, this.lighting);
-    this.ambient?.setAlpha(this.lighting.night * 0.2);
-    const windowLight = this.lighting.daylight.toFixed(2);
-    if (ACTIVE_THEME.id === "original" && this.windowLight !== windowLight) {
-      this.windowLight = windowLight;
-      this.drawHouse();
-    }
-    if (this.dirty) this.drawFurniture();
-    const ids = new Set(this.sim.cats.map((c) => c.id));
-    const catTint =
-      ((239 + Math.round(this.lighting.daylight * 16)) << 16) |
-      ((241 + Math.round(this.lighting.daylight * 14)) << 8) |
-      255;
-    for (const [id, s] of this.catSprites)
-      if (!ids.has(id)) {
-        s.destroy();
-        this.catSprites.delete(id);
-        this.labels.get(id)?.destroy();
-        this.labels.delete(id);
+    const { lighting } = this;
+    const lightChanged = this.lightingDirty;
+    this.lightingDirty = false;
+    const previousTint = this.catTint;
+    if (lightChanged) {
+      this.daylightArt?.update(lighting);
+      this.ambient?.setAlpha(lighting.night * 0.2);
+      const windowLight = lighting.daylight.toFixed(2);
+      if (ACTIVE_THEME.id === "original" && this.windowLight !== windowLight) {
+        this.windowLight = windowLight;
+        this.drawHouse();
       }
+      this.catTint =
+        ((239 + Math.round(lighting.daylight * 16)) << 16) |
+        ((241 + Math.round(lighting.daylight * 14)) << 8) |
+        255;
+    }
+    this.ambienceArt?.update(this.sim.elapsed, lighting);
+    this.themeArt?.update(this.sim.elapsed, lightChanged ? lighting : undefined);
+    const dirty = this.dirty;
+    if (dirty) this.drawFurniture();
+    const overlayMode = (this.edit ? 1 : 0) | (this.debug ? 2 : 0) | (this.presentation ? 4 : 0);
+    if (dirty || overlayMode !== this.overlayMode || this.overlayGraph !== this.sim.graph) {
+      this.drawOverlay();
+      this.overlayMode = overlayMode;
+      this.overlayGraph = this.sim.graph;
+    }
+
+    let chosen: Cat | undefined;
+    let rosterChanged = this.catSprites.size !== this.sim.cats.length;
     for (const c of this.sim.cats) {
+      const selected = c.id === this.selectedCat;
+      if (selected) chosen = c;
       let sprite = this.catSprites.get(c.id);
       if (!sprite) {
         sprite = this.add
           .sprite(0, 0, `cat-${c.variant}-idle`)
           .setOrigin(0.5, 0.64)
-          .setScale(1.6)
-          .setDepth(20)
+          .setTint(this.catTint)
           .setName(`resident-${c.id}`);
         this.catSprites.set(c.id, sprite);
-        const label = this.text(0, 0, "", 12, "#f8f0d8")
-          .setDepth(45)
-          .setBackgroundColor("#1b343ad9")
-          .setPadding(4, 2);
-        this.labels.set(c.id, label);
-      }
+        rosterChanged = true;
+      } else if (this.catTint !== previousTint) sprite.setTint(this.catTint);
+
       const p = worldPoint(roomById(c.roomId), c.x, c.y);
       const pose = catPose(c, this.sim.elapsed);
-      const ladder = c.move?.passage?.kind === "ladder";
-      const angle = ladder
-        ? passageWorldPoint(c.move!, 1).y < passageWorldPoint(c.move!, 0).y
-          ? -90
-          : 90
-        : pose.angle;
-      sprite
-        .setPosition(p.x + pose.x, p.y + pose.y)
-        .setDepth(pose.depth)
-        .setAngle(angle)
-        .setFlipX(ladder ? false : pose.facing < 0)
-        .setTexture(`cat-${c.variant}-${pose.animation}`, pose.frame)
-        .setTint(catTint)
-        .setScale(pose.scaleX, pose.scaleY);
-      const label = this.labels.get(c.id)!;
-      label.setVisible(
-        !this.presentation &&
-          (this.debug || c.id === this.selectedCat || c.state === "sleep"),
-      );
-      label.setText(
-        this.debug
+      let angle = pose.angle;
+      let flip = pose.facing < 0;
+      const move = c.move;
+      if (move?.passage?.kind === "ladder") {
+        let ladderAngle = this.ladderAngles.get(move);
+        if (ladderAngle === undefined) {
+          ladderAngle = passageWorldPoint(move, 1).y < passageWorldPoint(move, 0).y ? -90 : 90;
+          this.ladderAngles.set(move, ladderAngle);
+        }
+        angle = ladderAngle;
+        flip = false;
+      }
+      const texture = `cat-${c.variant}-${texturesByPose.get(pose.animation)}`;
+      if (sprite.texture.key !== texture || Number(sprite.frame.name) !== pose.frame)
+        sprite.setTexture(texture, pose.frame);
+      if (sprite.depth !== pose.depth) sprite.setDepth(pose.depth);
+      if (sprite.angle !== angle) sprite.setAngle(angle);
+      if (sprite.flipX !== flip) sprite.setFlipX(flip);
+      if (sprite.scaleX !== pose.scaleX || sprite.scaleY !== pose.scaleY)
+        sprite.setScale(pose.scaleX, pose.scaleY);
+      sprite.setPosition(p.x + pose.x, p.y + pose.y);
+
+      let label = this.labels.get(c.id);
+      if (!this.presentation && (this.debug || selected || c.state === "sleep")) {
+        if (!label) {
+          label = this.text(0, 0, "", 12, "#f8f0d8")
+            .setDepth(45)
+            .setBackgroundColor("#1b343ad9")
+            .setPadding(4, 2);
+          this.labels.set(c.id, label);
+        }
+        const text = this.debug
           ? `${c.name} · ${c.state}\n${c.surfaceId}`
-          : c.id === this.selectedCat
-            ? c.name
-            : "z z",
-      );
-      label.setPosition(p.x - label.width / 2, p.y - 44);
+          : selected ? c.name : "z z";
+        if (label.text !== text) label.setText(text);
+        label.setVisible(true).setPosition(p.x - label.width / 2, p.y - 44);
+      } else if (label?.visible) label.setVisible(false);
     }
-    this.drawOverlay();
+    if (rosterChanged) {
+      const ids = new Set(this.sim.cats.map((cat) => cat.id));
+      for (const [id, sprite] of this.catSprites) {
+        if (ids.has(id)) continue;
+        sprite.destroy();
+        this.catSprites.delete(id);
+        this.labels.get(id)?.destroy();
+        this.labels.delete(id);
+      }
+    }
+    this.drawSelection(chosen);
   }
 }
