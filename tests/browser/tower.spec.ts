@@ -150,13 +150,19 @@ test("the tower fills a portrait display, supports fullscreen cat introductions 
   ).toBeFocused();
   await page.keyboard.press("Tab");
   await expect(page.locator("#time-controls > summary")).toBeFocused();
-  // Closed disclosure contents must not enter the fullscreen focus loop.
+  // Closed time-panel controls are skipped, while ambience remains keyboard
+  // accessible before the focus loop wraps.
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: "Play ambience", exact: true })).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("slider", { name: "Ambience volume", exact: true })).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: "Pause motion", exact: true })).toBeFocused();
   await page.keyboard.press("Tab");
   await expect(
     page.getByRole("button", { name: "Exit fullscreen", exact: true }),
   ).toBeFocused();
-  await page.keyboard.press("Shift+Tab");
-  await expect(page.locator("#time-controls > summary")).toBeFocused();
+  await page.locator("#time-controls > summary").focus();
   await page.keyboard.press("Enter");
   await expect(page.locator("#time-panel")).toBeVisible();
   await bounded(page, "#time-panel");
